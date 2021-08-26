@@ -21,11 +21,7 @@
         <entry key="@webroot" value="@app/web" />
         <entry key="@vendor" value="vendor" />
         <entry key="@runtime" value="@app/runtime" />
-        <entry key="@console" value="console" />
-        <entry key="@common" value="common" />
-        <entry key="@yii2support-console-command-app-root" value="@console" />
-        <entry key="@frontend" value="frontend" />
-        <entry key="@backend" value="backend" />
+        <entry key="@yii2support-console-command-app-root" value="" />
       </map>
     </option>
   </component>
