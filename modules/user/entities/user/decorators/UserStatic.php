@@ -1,10 +1,10 @@
 <?php
 
 
-namespace modules\user\entities\user\deco;
+namespace vloop\user\entities\user\decorators;
 
 
-use modules\user\entities\interfaces\User;
+use vloop\user\entities\interfaces\User;
 
 class UserStatic implements User
 {

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace modules\user\entities\user;
+namespace vloop\user\entities\user;
 
 
-use modules\user\entities\interfaces\User;
-use modules\user\entities\interfaces\Users;
-use modules\user\entities\user\deco\UserStatic;
-use modules\user\tables\TableUsers;
+use vloop\user\entities\interfaces\User;
+use vloop\user\entities\interfaces\Users;
+use vloop\user\entities\user\deco\UserStatic;
+use vloop\user\tables\TableUsers;
 use yii\db\Query;
 
 class UsersByIds implements Users
@@ -102,7 +102,7 @@ class UsersByIds implements Users
 
     public function register(): User
     {
-        
+
     }
 
     public function remove(User $user): bool

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c05a4a1ed3e8ed7c83ac67ef171cdce9",
+    "content-hash": "3a8e27b200d6213a935bd67d7e70398e",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -5142,43 +5142,6 @@
             "time": "2021-07-28T10:34:58+00:00"
         },
         {
-            "name": "vloop/vloop-users",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "../user-module",
-                "reference": "84977b69d498b7431a327f1d39da39fb664c3dcf"
-            },
-            "require": {
-                "php": ">=7.2",
-                "yiisoft/yii2": "~2.0.42"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "vloop\\users\\": "src"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Vitaly Litvinov",
-                    "email": "cheltend@mail.ru",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Package",
-            "keywords": [
-                "test",
-                "yii2"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
             "name": "webmozart/assert",
             "version": "1.10.0",
             "source": {
@@ -5494,9 +5457,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "vloop/vloop-users": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace modules\user\controllers;
+namespace vloop\user\controllers;
 
 
-use modules\user\entities\user\UserSQL;
+use vloop\user\entities\user\UserSQL;
 use yii\web\Controller;
 
 class UserController extends Controller

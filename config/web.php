@@ -52,6 +52,11 @@ $config = [
         ],
         */
     ],
+    'modules'=>[
+        'user'=>[
+            "class"=>'vloop\user\UserModule'
+        ]
+    ],
     'params' => $params,
 ];
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace modules\user\tables\query;
+namespace vloop\user\tables\query;
 
 
 use yii\db\ActiveQuery;

@@ -29,8 +29,7 @@
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-yii2": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0",
-        "vloop/vloop-users": "@dev"
+        "codeception/module-asserts": "^1.0.0"
     },
     "config": {
         "process-timeout": 1800,
@@ -67,10 +66,11 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "path",
-            "url": "../user-module"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "vloop\\user\\": "modules/user"
+        }
+    }
 }

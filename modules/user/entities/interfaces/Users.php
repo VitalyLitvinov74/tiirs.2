@@ -1,7 +1,7 @@
 <?php
 
 
-namespace modules\user\entities\interfaces;
+namespace vloop\user\entities\interfaces;
 
 
 interface Users extends \Iterator

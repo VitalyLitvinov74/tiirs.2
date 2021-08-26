@@ -1,12 +1,12 @@
 <?php
 
 
-namespace modules\user\entities\user\decorators;
+namespace vloop\user\entities\user\decorators;
 
 
-use modules\user\entities\interfaces\User;
-use modules\user\entities\user\UserSQL;
-use modules\user\tables\TableUsers;
+use vloop\user\entities\interfaces\User;
+use vloop\user\entities\user\UserSQL;
+use vloop\user\tables\TableUsers;
 use Yii;
 use yii\web\IdentityInterface;
 /**
