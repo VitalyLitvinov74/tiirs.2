@@ -13,6 +13,7 @@ class UserModule extends Module
     public function init()
     {
         parent::init();
+        $this->controllerNamespace = 'vloop\user\controllers';
         Yii::$app->setComponents([
             'authManager' => [
                 'class' => 'yii\rbac\DbManager',

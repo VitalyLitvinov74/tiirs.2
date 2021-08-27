@@ -65,6 +65,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        VarDumper::dump('hello');
         $users = new UsersStatic(
             new AdapterForUsers()
         );

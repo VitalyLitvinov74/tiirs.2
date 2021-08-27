@@ -5,11 +5,13 @@ namespace vloop\user\controllers;
 
 
 use vloop\user\entities\user\UserSQL;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 
 class UserController extends Controller
 {
-    public function actionIndex(){
-        $user = new UserSQL(1);
+    public function actionLogin(){
+        $this->layout = '@app/views/layouts/loginPage';
+        return $this->render("login");
     }
 }
