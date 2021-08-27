@@ -25,10 +25,7 @@ class m210826_210326_add_RBAC extends Migration
      */
     public function safeDown()
     {
-        Yii::$app->runAction('migrate/down', [
-            'migrationPath' => '@yii/rbac/migrations/',
-            'interactive' => false
-        ]);
+        //дописать
     }
 
     /*

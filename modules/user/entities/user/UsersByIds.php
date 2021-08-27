@@ -7,6 +7,7 @@ namespace vloop\user\entities\user;
 use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\Users;
 use vloop\user\entities\user\deco\UserStatic;
+use vloop\user\entities\user\decorators\UserStatic;
 use vloop\user\tables\TableUsers;
 use yii\db\Query;
 
