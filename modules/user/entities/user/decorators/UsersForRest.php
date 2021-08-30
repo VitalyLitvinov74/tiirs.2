@@ -1,28 +1,25 @@
 <?php
 
 
-namespace vloop\user\entities\user;
+namespace vloop\user\entities\user\decorators;
 
 
 use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\Users;
-use vloop\user\entities\user\decorators\UserStatic;
-use vloop\user\tables\TableUsers;
-use yii\db\Query;
 use yii\helpers\VarDumper;
 
-class UsersByIds implements Users
+class UsersForRest implements Users
 {
+    private $origin;
     private $position = 0;
-    private $needle;
+    /**@var array*/
+    private $arr = false;
 
     /**
-     * Если массив пустой то будет произведен поиск по всем пользователям
-     * @param array $ids - массив ид юзеров коотрый нужно получить
+     * @param Users $origin
      */
-    public function __construct(array $ids = [])
-    {
-        $this->needle = $ids;
+    public function __construct(Users $origin) {
+        $this->origin = $origin;
     }
 
     /**
@@ -30,26 +27,30 @@ class UsersByIds implements Users
      */
     public function list(): array
     {
-        $records = $this->records();
-        $new = [];
-        foreach ($records as $record) {
-            $new[] = new UserStatic(
-                new UserSQL($record['id']),
-                $record['auth_key']
+        $origList = $this->origin;
+        if($this->arr !== false){
+            return $this->arr;
+        }
+        $this->arr = [];
+        foreach ($origList as $user) {
+            $userRest = new UserRest(
+                $user,
+                ['id', 'name']
             );
+            $this->arr[] = $userRest->printYourself();
         }
-        return $new;
+        return $this->arr;
     }
 
-    private function records()
+    public function register(): User
     {
-        $records = TableUsers::find()->select(['id', 'auth_key']);
-        if ($this->needle){
-            $records->where(['id'=>$this->needle]);
-        }
-        return $records->readAll();
+        return $this->origin->register();
     }
 
+    public function remove(User $user): bool
+    {
+        return $this->origin->remove($user);
+    }
 
     /**
      * Return the current element
@@ -108,13 +109,4 @@ class UsersByIds implements Users
     }
 
 
-    public function register(): User
-    {
-
-    }
-
-    public function remove(User $user): bool
-    {
-        return TableUsers::deleteAll(['id' => $user->id()]);
-    }
 }

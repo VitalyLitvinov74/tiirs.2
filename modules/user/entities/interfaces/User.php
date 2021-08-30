@@ -20,6 +20,4 @@ interface User
      * печатает себя в виде массива
     */
     function printYourself():array;
-
-    function isGuest(): bool;
 }
