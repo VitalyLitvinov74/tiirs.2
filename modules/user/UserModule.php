@@ -21,6 +21,18 @@ class UserModule extends Module
                 'ruleTable' => 'vloop_rules',
                 'assignmentTable' => "vloop_permissions_users",
                 'itemChildTable' => 'vloop_role_paths',
+            ],
+            'response'=>[
+                'class' => 'yii\web\Response',
+                'on beforeSend' => function ($event) {
+                    $response = $event->sender;
+                    $exception = Yii::$app->errorHandler->exception;
+                    if ($response->data !== null and $exception) {
+                        $response->data = [
+                            'errors' => [$response->data],
+                        ];
+                    }
+                },
             ]
         ]);
     }

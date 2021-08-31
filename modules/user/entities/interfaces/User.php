@@ -15,9 +15,9 @@ interface User
 
     /**
      * @param string $password - пароль или access token
-     * @return bool - удачно ли авторизовался
+     * @return array - если удачно то напечатает себя, если нет то выдаст ошибку.
      */
-    function login(string $password): bool;
+    function login(string $password): array;
 
     /**
      * @return bool - выходит из системы

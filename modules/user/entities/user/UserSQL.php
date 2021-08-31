@@ -29,7 +29,7 @@ class UserSQL implements User
         return $this->id;
     }
 
-    function login(string $password): bool
+    function login(string $password): array
     {
         $secure = Yii::$app->security;
         $hash = $this->record()->password_hash;
@@ -41,9 +41,10 @@ class UserSQL implements User
                 throw new \LogicException("Не получилось разлогинить предидузего пользователя.");
             }
             $this->record()->save();
-            return $userComponent->login(new IdentityUser($this));
+            $userComponent->login(new IdentityUser($this));
+            return $this->printYourself();
         }
-        return false;
+        return [];
     }
 
     function logout(): bool

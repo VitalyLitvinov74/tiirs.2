@@ -45,9 +45,9 @@ class Guest implements User
      * @param string $password - пароль или access token
      * @return bool - удачно ли авторизовался
      */
-    function login(string $password): bool
+    function login(string $password): array
     {
-        return false;
+        return [];
     }
 
     /**

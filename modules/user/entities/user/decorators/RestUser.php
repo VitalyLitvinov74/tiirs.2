@@ -61,25 +61,11 @@ class RestUser implements User
     }
 
     /**
-     * @param string $accessToken - пароль или access token
-     * @return bool - удачно ли авторизовался
+     * @param string $password
+     * @return array - удачно ли авторизовался
      */
-    function login(string $accessToken): bool
+    function login(string $password): array
     {
-        $accessTokenDB = $this->printYourself()['access_token'];
-        $userComponent = Yii::$app->user;
-        $secure = Yii::$app->security;
-        if ($accessTokenDB == $accessToken) {
-            try {
-                TableUsers::updateAll(
-                    ['access_token' => $secure->generateRandomString()],
-                    ['id' => $this->id()]
-                );
-            } catch (Exception $e) {
-                throw new LogicException('Не удалось разлогинить предыдущего пользователя');
-            }
-            $userComponent->login(new IdentityUser($this));
-        }
-        return false;
+        return $this->origin->login($password);
     }
 }

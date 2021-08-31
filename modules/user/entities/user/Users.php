@@ -71,7 +71,7 @@ class Users implements UsersInterface
     public function oneByCriteria(array $criteria): User
     {
         $user = TableUsers::find()->where($criteria)->readOne();
-        if(count($user)){
+        if($user){
             return new StaticUser(
                 new UserSQL(
                     $user['id']

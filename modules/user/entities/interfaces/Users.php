@@ -14,9 +14,12 @@ interface Users
     public function all(): array;
 
     /**
+     * @param string $name - имя (ФИО) пользователя.
+     * @param string $login - логин который нужно задать пользователю
+     * @param string $password - Пароль который нужно задать пользователю
      * @return User - новый пользователь которого удалось зарегистрировать.
      */
-    public function register(): User;
+    public function register(string $name, string $login, string $password): User;
 
     /**
      * @param User $user - пользователь которого нужно удалить

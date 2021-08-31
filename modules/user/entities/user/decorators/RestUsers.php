@@ -6,6 +6,7 @@ namespace vloop\user\entities\user\decorators;
 
 use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\Users;
+use yii\helpers\VarDumper;
 
 class RestUsers implements Users
 {
