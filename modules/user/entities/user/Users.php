@@ -8,6 +8,9 @@ use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\Users as UsersInterface;
 use vloop\user\entities\user\decorators\StaticUser;
 use vloop\user\tables\TableUsers;
+use Yii;
+use yii\base\Exception;
+use yii\console\widgets\Table;
 use yii\db\Query;
 use yii\helpers\VarDumper;
 
@@ -30,16 +33,10 @@ class Users implements UsersInterface
     private function records()
     {
         $records = TableUsers::find()->select(['id', 'auth_key']);
-        if ($this->needle){
-            $records->where(['id'=>$this->needle]);
+        if ($this->needle) {
+            $records->where(['id' => $this->needle]);
         }
         return $records->readAll();
-    }
-
-
-    public function register(): User
-    {
-        return new Guest();
     }
 
     public function remove(User $user): bool
@@ -71,7 +68,7 @@ class Users implements UsersInterface
     public function oneByCriteria(array $criteria): User
     {
         $user = TableUsers::find()->where($criteria)->readOne();
-        if($user){
+        if ($user) {
             return new StaticUser(
                 new UserSQL(
                     $user['id']
@@ -80,5 +77,64 @@ class Users implements UsersInterface
             );
         }
         return $this->guest;
+    }
+
+    /**
+     * @param string $name - имя (ФИО) пользователя.
+     * @param string $login - логин который нужно задать пользователю
+     * @param string $password - Пароль который нужно задать пользователю
+     * @return User - новый пользователь которого удалось зарегистрировать.
+     * @throws Exception
+     */
+    public function registerNew(string $name, string $login = '', string $password = ''): User
+    {
+        $secure = Yii::$app->security;
+        $login = $this->createLogin($login);
+        $password = $this->createPassword($password);
+        $record = new TableUsers([
+            'name' => $name,
+            'login' => $login,
+            'password_hash' => $secure->generatePasswordHash($password),
+            'access_token' => $secure->generateRandomString(32)
+        ]);
+        if ($record->save()) {
+            return new StaticUser(
+                new UserSQL(
+                    $record->id
+                ),
+                $record->auth_key
+            );
+        }
+        return new Guest();
+    }
+
+    private function createLogin(string $login)
+    {
+        if (!$login) {
+            $lastID = $this->lastId() + 1;
+            $login = 'user' . $lastID;
+        }
+        $loginNotUnique = !TableUsers::find()->where(['login' => $login])->exists();
+        if ($loginNotUnique) {
+            $login = $login . rand(0, 100);
+            $login = $this->createLogin($login); //рекурсивно прогоняем, и каждый раз проверяем уникальный ли это логин
+        }
+        return $login;
+    }
+
+    private function createPassword(string $password){
+        if(!$password){
+            $password = time();
+        }
+        return $password;
+    }
+
+    private function lastId()
+    {
+        $lastID = TableUsers::find()->select('id')->orderBy(['id' => SORT_DESC])->readOne()['id'];
+        if (!$lastID) {
+            $lastID = 0;
+        }
+        return $lastID;
     }
 }

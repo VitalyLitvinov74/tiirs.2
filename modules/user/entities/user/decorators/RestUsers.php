@@ -45,14 +45,6 @@ class RestUsers implements Users
     }
 
     /**
-     * @return User - новый пользователь которого удалось зарегистрировать.
-     */
-    public function register(): User
-    {
-        return $this->origin->register();
-    }
-
-    /**
      * @param User $user - пользователь которого нужно удалить
      * @return bool - удачно ли удален пользователь из системы
      */
@@ -70,5 +62,17 @@ class RestUsers implements Users
     {
         $orig = $this->origin->oneByCriteria($criteria);
         return new RestUser($orig, $this->needleFields);
+    }
+
+    /**
+     * @param string $name - имя (ФИО) пользователя.
+     * @param string $login - логин который нужно задать пользователю
+     * @param string $password - Пароль который нужно задать пользователю
+     * @return User - новый пользователь которого удалось зарегистрировать.
+     */
+    public function registerNew(string $name, string $login, string $password): User
+    {
+        $user = $this->origin->registerNew($name, $login, $password);
+        return new RestUser($user, $this->needleFields);
     }
 }

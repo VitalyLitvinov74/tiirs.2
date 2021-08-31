@@ -19,7 +19,7 @@ interface Users
      * @param string $password - Пароль который нужно задать пользователю
      * @return User - новый пользователь которого удалось зарегистрировать.
      */
-    public function register(string $name, string $login, string $password): User;
+    public function registerNew(string $name, string $login, string $password): User;
 
     /**
      * @param User $user - пользователь которого нужно удалить

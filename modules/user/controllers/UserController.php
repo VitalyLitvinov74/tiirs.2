@@ -52,7 +52,11 @@ class UserController extends Controller
                 new Users(),
                 ['id', 'name']
             );
-            return $users->register();
+            return $users->registerNew(
+                $form->name,
+                $form->login,
+                $form->password
+            );
         }
         return [];
     }

@@ -8,6 +8,11 @@ use vloop\user\entities\interfaces\User;
 
 class Guest implements User
 {
+    private $self;
+
+    public function __construct($self = []) {
+        $this->self = $self;
+    }
 
     /**
      * @return int - идентификатор пользователя
@@ -30,7 +35,7 @@ class Guest implements User
      */
     function printYourself(): array
     {
-        return [];
+        return $this->self;
     }
 
     /**
@@ -48,14 +53,5 @@ class Guest implements User
     function login(string $password): array
     {
         return [];
-    }
-
-    /**
-     * @param string $accessToken
-     * @return bool
-     */
-    public function loginByAccessToken(string $accessToken): bool
-    {
-        return false;
     }
 }
