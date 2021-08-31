@@ -14,6 +14,7 @@ use vloop\user\entities\user\decorators\IdentityUser;
 use vloop\user\entities\user\decorators\RestUser;
 use vloop\user\entities\user\decorators\RestUsers;
 use vloop\user\entities\user\decorators\StaticUser;
+use vloop\user\entities\user\Guest;
 use vloop\user\entities\user\Users;
 use yii\base\ErrorException;
 use yii\db\Exception;
@@ -33,12 +34,12 @@ class UserController extends Controller
         if ($post->validated()) {
             $users = new RestUsers(
                 new Users(),
-                ['id', 'name', 'access_token']
+                ['id', 'name', 'access_token', 'errors'] //белый список полей которые можно возвращать
             );
             $user = $users->oneByCriteria(['login' => $form->login]);
             return $user->login($form->password);
         }
-        return [];
+        return (new Guest($form->errors))->printYourself();
     }
 
     public function actionCreate()
@@ -59,7 +60,7 @@ class UserController extends Controller
                     $form->password
                 )->printYourself();
         }
-        return $form->errors;
+        return (new Guest($form->errors))->printYourself();
     }
 
 

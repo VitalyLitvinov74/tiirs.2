@@ -22,19 +22,15 @@ class IdentityUser implements IdentityInterface, User
         $this->user = $user;
     }
 
-    function id(): string
+    function id(): int
     {
         return $this->user->id();
     }
 
-    function authKey(): string
+    function login(string $password): array
     {
-        return $this->user->authKey();
-    }
-
-    function login(string $password, bool $byAccessToken = false): bool
-    {
-        return Yii::$app->user->login($this);
+        Yii::$app->user->login($this);
+        return $this->printYourself();
     }
 
     function logout(): bool
@@ -119,7 +115,7 @@ class IdentityUser implements IdentityInterface, User
      */
     public function getAuthKey()
     {
-        return $this->authKey();
+        return $this->printYourself()['auth_key'];
     }
 
     /**
