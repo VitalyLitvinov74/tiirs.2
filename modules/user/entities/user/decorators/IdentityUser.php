@@ -13,7 +13,7 @@ use yii\web\IdentityInterface;
  * Объект который поддерживает авторизацию через фремворк.
  *
 */
-class UserIdentity implements IdentityInterface, User
+class IdentityUser implements IdentityInterface, User
 {
     private $user;
 
@@ -50,9 +50,9 @@ class UserIdentity implements IdentityInterface, User
         return $this->user->printYourself();
     }
 
-    function isGuest(): bool
+    function notGuest(): bool
     {
-        return $this->user->isGuest();
+        return $this->user->notGuest();
     }
 
     /**

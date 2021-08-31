@@ -6,7 +6,7 @@ namespace vloop\user\entities\user\decorators;
 
 use vloop\user\entities\interfaces\User;
 
-class UserStatic implements User
+class StaticUser implements User
 {
     private $authKey;
     private $origin;
@@ -16,14 +16,9 @@ class UserStatic implements User
         $this->origin = $origin;
     }
 
-    function id(): string
+    function id(): int
     {
         return $this->origin->id();
-    }
-
-    function authKey(): string
-    {
-        return $this->authKey;
     }
 
     function login(string $password, bool $byAccessToken = false): bool
@@ -44,8 +39,8 @@ class UserStatic implements User
         return $this->origin->printYourself();
     }
 
-    function isGuest(): bool
+    function notGuest(): bool
     {
-        return $this->origin->isGuest();
+        return $this->origin->notGuest();
     }
 }

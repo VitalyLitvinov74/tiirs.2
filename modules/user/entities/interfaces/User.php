@@ -8,16 +8,29 @@ use yii\web\IdentityInterface;
 
 interface User
 {
-    function id(): string;
+    /**
+     * @return int - идентификатор пользователя
+    */
+    function id(): int;
 
-    function authKey(): string;
+    /**
+     * @param string $password - пароль или access token
+     * @return bool - удачно ли авторизовался
+     */
+    function login(string $password): bool;
 
-    function login(string $password, bool $byAccessToken = false): bool;
-
+    /**
+     * @return bool - выходит из системы
+    */
     function logout(): bool;
 
     /**
-     * печатает себя в виде массива
+     * @return array - печатает себя в виде массива
     */
     function printYourself():array;
+
+    /**
+     * @return bool - паттерн null object
+    */
+    function notGuest(): bool;
 }

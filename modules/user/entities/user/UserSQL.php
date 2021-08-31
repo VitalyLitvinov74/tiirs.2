@@ -5,9 +5,10 @@ namespace vloop\user\entities\user;
 
 use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\User as UserInterface;
-use vloop\user\entities\user\decorators\UserIdentity;
+use vloop\user\entities\user\decorators\IdentityUser;
 use vloop\user\tables\TableUsers;
 use Yii;
+use yii\base\Exception;
 use yii\web\IdentityInterface;
 
 /**
@@ -23,23 +24,24 @@ class UserSQL implements User
         $this->id = $id;
     }
 
-    function id(): string
+    function id(): int
     {
         return $this->id;
     }
 
-    function authKey(): string
+    function login(string $password): bool
     {
-        return $this->record()->auth_key;
-    }
-
-    function login(string $password, bool $byAccessToken = false): bool
-    {
-        $security = Yii::$app->security;
-        if($byAccessToken and $this->validAccessToken($password)){
-            return Yii::$app->user->login(new UserIdentity($this));
-        }else if($this->validPassword($password)){
-            return Yii::$app->user->login(new UserIdentity($this));
+        $secure = Yii::$app->security;
+        $hash = $this->record()->password_hash;
+        $userComponent = Yii::$app->user;
+        if ($secure->validatePassword($password, $hash)) {
+            try {
+                $this->record()->access_token = Yii::$app->security->generateRandomString();
+            } catch (Exception $e) {
+                throw new \LogicException("Не получилось разлогинить предидузего пользователя.");
+            }
+            $this->record()->save();
+            return $userComponent->login(new IdentityUser($this));
         }
         return false;
     }
@@ -57,9 +59,9 @@ class UserSQL implements User
         return $this->record()->toArray();
     }
 
-    function isGuest(): bool
+    function notGuest(): bool
     {
-        return false;
+        return true;
     }
 
     private function record()
@@ -71,11 +73,25 @@ class UserSQL implements User
         return $this->record;
     }
 
-    private function validPassword(string $password): bool{
-        return Yii::$app->security->validatePassword($password, $this->record()->password_hash);
-    }
-
-    private function validAccessToken(string $accessToken): bool{
-        return $this->record()->access_token == $accessToken;
-    }
+//    /**
+//     * @param string $accessToken
+//     * @return bool
+//     */
+//    public function loginByAccessToken(string $accessToken): bool
+//    {
+//        if($this->record()->access_token == $accessToken){
+//            return $this->login();
+//        }
+//        return false;
+//    }
+//
+//    private function login(): bool{
+//        try {
+//            $this->record()->access_token = Yii::$app->security->generateRandomString();
+//        } catch (Exception $e) {
+//            return false;
+//        }
+//        $this->record()->save();
+//        return Yii::$app->user->login(new UserIdentity($this));
+//    }
 }
