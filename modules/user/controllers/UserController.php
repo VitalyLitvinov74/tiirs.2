@@ -4,17 +4,14 @@
 namespace vloop\user\controllers;
 
 
-
+use http\Exception\InvalidArgumentException;
 use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
-use vloop\user\entities\common\UserException;
-use vloop\user\entities\common\ModelErrors;
-use vloop\user\entities\forms\CreateForm;
+use vloop\user\entities\forms\CreateUserForm;
 use vloop\user\entities\forms\decorators\PostForm;
 use vloop\user\entities\forms\LoginForm;
 use vloop\user\entities\user\decorators\IdentityUser;
 use vloop\user\entities\user\decorators\RestUser;
-use vloop\user\entities\user\decorators\UsersForRest;
 use vloop\user\entities\user\decorators\RestUsers;
 use vloop\user\entities\user\decorators\StaticUser;
 use vloop\user\entities\user\Users;
@@ -28,37 +25,41 @@ use yii\web\NotFoundHttpException;
 
 class UserController extends Controller
 {
-    public function actionLogin(){
+    public function actionLogin()
+    {
         $post = new PostForm(
-           $form = new LoginForm()
+            $form = new LoginForm()
         );
-        if($post->validated()){
+        if ($post->validated()) {
             $users = new RestUsers(
                 new Users(),
                 ['id', 'name', 'access_token']
             );
-            $user = $users->oneByCriteria(['login'=>$form->login]);
+            $user = $users->oneByCriteria(['login' => $form->login]);
             return $user->login($form->password);
         }
         return [];
     }
 
-    public function actionCreate(){
+    public function actionCreate()
+    {
         $post = new PostForm(
-            $form = new CreateForm()
+            $form = new CreateUserForm()
         );
-        if($post->validated()){
+
+        if ($post->validated()) {
             $users = new RestUsers(
                 new Users(),
-                ['id', 'name']
+                ['id', 'name', 'login', 'errors']
             );
-            return $users->registerNew(
-                $form->name,
-                $form->login,
-                $form->password
-            );
+            return $users
+                ->registerNew(
+                    $form->name,
+                    $form->login,
+                    $form->password
+                )->printYourself();
         }
-        return [];
+        return $form->errors;
     }
 
 

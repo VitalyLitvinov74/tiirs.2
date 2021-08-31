@@ -35,7 +35,11 @@ class Guest implements User
      */
     function printYourself(): array
     {
-        return $this->self;
+        return [
+            "errors"=>[
+                $this->self
+            ]
+        ];
     }
 
     /**

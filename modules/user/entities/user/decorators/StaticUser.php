@@ -21,9 +21,9 @@ class StaticUser implements User
         return $this->origin->id();
     }
 
-    function login(string $password, bool $byAccessToken = false): bool
+    function login(string $password): array
     {
-        return $this->origin->login($password, $byAccessToken);
+        return $this->origin->login($password);
     }
 
     function logout(): bool
