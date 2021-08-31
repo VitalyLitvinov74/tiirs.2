@@ -16,16 +16,22 @@ use vloop\user\entities\user\decorators\RestUsers;
 use vloop\user\entities\user\decorators\StaticUser;
 use vloop\user\entities\user\ErrorUser;
 use vloop\user\entities\user\Users;
-use yii\base\ErrorException;
-use yii\db\Exception;
-use yii\helpers\VarDumper;
+use Yii;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
-use yii\web\HttpException;
-use yii\web\NotAcceptableHttpException;
-use yii\web\NotFoundHttpException;
 
 class UserController extends Controller
 {
+//    public function behaviors()
+//    {
+//        $behaviors = parent::behaviors();
+//        $behaviors['authenticator'] = [
+//            'class' => QueryParamAuth::class,
+//            'tokenParam' => 'access_token',
+//        ];
+//        return $behaviors;
+//    }
+
     public function actionLogin()
     {
         $post = new PostForm(
@@ -61,6 +67,10 @@ class UserController extends Controller
                 )->printYourself();
         }
         return (new ErrorUser($form->errors))->printYourself();
+    }
+
+    public function actionCheckAuth(){
+        return Yii::$app->user->isGuest;
     }
 
 

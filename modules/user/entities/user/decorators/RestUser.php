@@ -66,6 +66,7 @@ class RestUser implements User
      */
     function login(string $password): array
     {
-        return $this->origin->login($password);
+        $origin = $this->origin->login($password);
+        return $this->printYourself(); //будет печатать текущего себя
     }
 }
