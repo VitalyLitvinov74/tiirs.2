@@ -6,7 +6,7 @@ namespace vloop\user\entities\user;
 
 use vloop\user\entities\interfaces\User;
 
-class Guest implements User
+class ErrorUser implements User
 {
     private $self;
 
@@ -56,6 +56,6 @@ class Guest implements User
      */
     function login(string $password): array
     {
-        return [];
+        return $this->printYourself();
     }
 }

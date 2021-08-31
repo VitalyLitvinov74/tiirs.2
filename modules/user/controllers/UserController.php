@@ -14,7 +14,7 @@ use vloop\user\entities\user\decorators\IdentityUser;
 use vloop\user\entities\user\decorators\RestUser;
 use vloop\user\entities\user\decorators\RestUsers;
 use vloop\user\entities\user\decorators\StaticUser;
-use vloop\user\entities\user\Guest;
+use vloop\user\entities\user\ErrorUser;
 use vloop\user\entities\user\Users;
 use yii\base\ErrorException;
 use yii\db\Exception;
@@ -39,7 +39,7 @@ class UserController extends Controller
             $user = $users->oneByCriteria(['login' => $form->login]);
             return $user->login($form->password);
         }
-        return (new Guest($form->errors))->printYourself();
+        return (new ErrorUser($form->errors))->printYourself();
     }
 
     public function actionCreate()
@@ -60,7 +60,7 @@ class UserController extends Controller
                     $form->password
                 )->printYourself();
         }
-        return (new Guest($form->errors))->printYourself();
+        return (new ErrorUser($form->errors))->printYourself();
     }
 
 

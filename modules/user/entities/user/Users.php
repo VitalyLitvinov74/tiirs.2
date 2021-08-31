@@ -3,6 +3,7 @@
 
 namespace vloop\user\entities\user;
 
+use Faker\ORM\Spot\ColumnTypeGuesser;
 use vloop\user\entities\interfaces\User;
 use vloop\user\entities\interfaces\Users as UsersInterface;
 use vloop\user\entities\user\decorators\StaticUser;
@@ -14,7 +15,6 @@ class Users implements UsersInterface
 {
     private $position = 0;
     private $needle;
-    private $guest;
 
     /**
      * Если массив пустой то будет произведен поиск по всем пользователям
@@ -23,7 +23,6 @@ class Users implements UsersInterface
     public function __construct(array $ids = [])
     {
         $this->needle = $ids;
-        $this->guest = new Guest();
     }
 
     private function records()
@@ -72,7 +71,9 @@ class Users implements UsersInterface
                 $user['auth_key']
             );
         }
-        return $this->guest;
+        return new ErrorUser([
+            'title'=>'Пользователь с таким логином не найден.'
+        ]);
     }
 
     /**
@@ -93,7 +94,7 @@ class Users implements UsersInterface
                 'auth_key' => $secure->generateRandomString(32)
             ]);
         } catch (Exception $e) {
-            return new Guest(["title" => "Не удалось сгенерировать хеш пароля."]);
+            return new ErrorUser(["title" => "Не удалось сгенерировать хеш пароля."]);
         }
         try {
             if ($record->save()) {
@@ -104,11 +105,11 @@ class Users implements UsersInterface
                     $record->auth_key
                 );
             }
-            return new Guest([
+            return new ErrorUser([
                 "title" => "Текущий пользователь уже существует."
             ]);
         } catch (\yii\db\Exception $exception) {
-            return new Guest([
+            return new ErrorUser([
                 "title" => "Не удалось сохранить данные в бд. Не хватает полей для записи.",
                 "fields" => $record->getAttributes()
             ]);

@@ -66,10 +66,6 @@ class RestUser implements User
      */
     function login(string $password): array
     {
-        $origin = $this->origin->login($password);
-        if($origin){
-            return $this->printYourself();
-        }
-        return $origin; //тут будет ошибка авторизации если есть.
+        return $this->origin->login($password);
     }
 }

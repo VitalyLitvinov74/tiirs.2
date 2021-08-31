@@ -36,15 +36,15 @@ class UserSQL implements User
         $userComponent = Yii::$app->user;
         if ($secure->validatePassword($password, $hash)) {
             try {
-                $this->record()->access_token = Yii::$app->security->generateRandomString();
+                $this->record()->access_token = Yii::$app->security->generateRandomString(32);
             } catch (Exception $e) {
-                throw new \LogicException("Не получилось разлогинить предидузего пользователя.");
+                return (new ErrorUser(['title'=>'Не удалось сгенерировать рандомную строку']))->printYourself();
             }
             $this->record()->save();
             $userComponent->login(new IdentityUser($this));
             return $this->printYourself();
         }
-        return [];
+        return (new ErrorUser(["title"=>"Не верный логин или пароль"]))->printYourself();
     }
 
     function logout(): bool
@@ -73,26 +73,4 @@ class UserSQL implements User
         $this->record = TableUsers::findOne(['id' => $this->id]);
         return $this->record;
     }
-
-//    /**
-//     * @param string $accessToken
-//     * @return bool
-//     */
-//    public function loginByAccessToken(string $accessToken): bool
-//    {
-//        if($this->record()->access_token == $accessToken){
-//            return $this->login();
-//        }
-//        return false;
-//    }
-//
-//    private function login(): bool{
-//        try {
-//            $this->record()->access_token = Yii::$app->security->generateRandomString();
-//        } catch (Exception $e) {
-//            return false;
-//        }
-//        $this->record()->save();
-//        return Yii::$app->user->login(new UserIdentity($this));
-//    }
 }
