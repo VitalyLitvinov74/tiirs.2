@@ -5,22 +5,31 @@ namespace vloop\problems\entities\problem\decorators;
 
 
 use vloop\problems\entities\interfaces\EntitiesList;
+use vloop\problems\entities\interfaces\Form;
 use vloop\problems\entities\interfaces\Problem;
 use vloop\problems\entities\interfaces\Role;
 use vloop\problems\entities\problem\ProblemsList;
-
-class ProblemFromList implements Problem
+/**
+ * характеризуется следующими параметрами:
+ * 1. ид проблемы из формы поиска
+ * 2. списоком всех проблем
+ *
+ *
+ * Проблема из списка по ИД в форме
+*/
+class ProblemById implements Problem
 {
-    private $needle;
+    private $form;
     private $list;
 
-    public function __construct(int $needle, ProblemsList $list) {
+    public function __construct(Form $form, ProblemsList $list) {
         $this->list = $list;
-        $this->needle = $needle;
+        $this->form = $form;
     }
 
     private function problem(): Problem{
-        return $this->list->oneByCriteria(['id'=>$this->needle]);
+        $fields = $this->form->validatedFields();
+        return $this->list->oneByCriteria(['id'=>$fields['id']]);
     }
 
     public function id(): int
