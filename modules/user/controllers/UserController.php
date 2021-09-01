@@ -55,8 +55,10 @@ class UserController extends Controller
                 new Users(),
                 ['name', 'access_token', 'errors'] //белый список полей которые можно возвращать
             );
-            $user = $users->oneByCriteria(['login' => $form->login]);
-            return $user->login($form->password);
+            return $users
+                ->oneByCriteria(['login' => $form->login])
+                ->login($form->password)
+            ;
         }
         $restNull = new RestUser(
             new NullUser($form->errors),
