@@ -11,6 +11,6 @@ class Workman implements Role
 
     public function type(): string
     {
-        // TODO: Implement type() method.
+        return "workman";
     }
 }

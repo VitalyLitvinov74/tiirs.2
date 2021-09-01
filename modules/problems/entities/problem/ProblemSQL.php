@@ -4,46 +4,33 @@
 namespace vloop\problems\entities\problem;
 
 use vloop\problems\entities\interfaces\Problem;
-use vloop\problems\entities\problem\ProblemSQL as ProblemInterface;
+use vloop\problems\entities\interfaces\Role;
+use vloop\problems\tables\TableProblems;
+use vloop\problems\tables\TableProblemsUsers;
 
 class ProblemSQL implements Problem
 {
 
-    public function __construct(int $id) {
+    private $id;
 
+    public function __construct(int $id) {
+        $this->id = $id;
     }
 
     public function id(): int
     {
-        // TODO: Implement id() method.
+        return $this->id;
     }
 
     public function printYourself(): array
     {
-        // TODO: Implement printYourself() method.
+        return $this->record()->toArray();
     }
 
     public function changeStatus(string $status): bool
     {
-        // TODO: Implement changeStatus() method.
-    }
-
-    /**
-     * добавляет контроллера к задаче
-     * @param int $id - ид юзера
-     */
-    public function attachForeman(int $id)
-    {
-        // TODO: Implement attachForeman() method.
-    }
-
-    /**
-     * добавляет исполнителя к задаче
-     * @param int $id
-     */
-    public function attachWorkman(int $id)
-    {
-        // TODO: Implement attachWorkman() method.
+        $record = $this->record()->status = $status;
+        return $record->save();
     }
 
     /**
@@ -54,6 +41,34 @@ class ProblemSQL implements Problem
      */
     public function detachUser(int $id)
     {
-        // TODO: Implement detachUser() method.
+        TableProblemsUsers::deleteAll(['user_id'=>$id]);
+    }
+
+    private $record = false;
+
+    /**
+     * @return null|array|bool|TableProblems|\yii\db\ActiveRecord
+     */
+    private function record(){
+        if($this->record !== false){
+            return $this->record;
+        }
+        $this->record = TableProblems::find()->where(['id'=>$this->id()])->one();
+        return $this->record;
+    }
+
+    /**
+     * добавляет пользователя к задаче
+     * @param int $id - ид юзера
+     * @param Role $userRoleInProblem
+     * @return bool
+     */
+    public function attachUser(int $id, Role $userRoleInProblem)
+    {
+        $record = new TableProblemsUsers();
+        $record->user_id = $id;
+        $record->role = $userRoleInProblem->type();
+        $record->problem_id = $this->id();
+        return $record->save();
     }
 }

@@ -4,25 +4,16 @@
 namespace vloop\problems\entities\interfaces;
 
 
-interface Problem
+interface Problem extends Entity
 {
-    public function id(): int;
-
-    public function printYourself(): array;
-
     public function changeStatus(string $status): bool;
 
     /**
-     * добавляет контроллера к задаче
+     * добавляет пользователя к задаче
      * @param int $id - ид юзера
+     * @param Role $userRoleInProblem
      */
-    public function attachForeman(int $id);
-
-    /**
-     * добавляет исполнителя к задаче
-     * @param int $id
-     */
-    public function attachWorkman(int $id);
+    public function attachUser(int $id, Role $userRoleInProblem);
 
     /**
      * открепляет пользователя от задачи,
