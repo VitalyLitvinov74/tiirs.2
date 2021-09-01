@@ -38,13 +38,13 @@ class UserSQL implements User
             try {
                 $this->record()->access_token = Yii::$app->security->generateRandomString(32);
             } catch (Exception $e) {
-                return (new ErrorUser(['title'=>'Не удалось сгенерировать рандомную строку']))->printYourself();
+                return (new NullUser(['string'=>'Не удалось сгенерировать рандомную строку']))->printYourself();
             }
             $this->record()->save();
             $userComponent->login(new IdentityUser($this));
             return $this->printYourself();
         }
-        return (new ErrorUser(["title"=>"Не верный логин или пароль"]))->printYourself();
+        return (new NullUser(["login"=>"Не верный логин или пароль"]))->printYourself();
     }
 
     function logout(): bool

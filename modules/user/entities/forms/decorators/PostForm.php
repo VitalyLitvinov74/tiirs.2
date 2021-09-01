@@ -4,11 +4,12 @@
 namespace vloop\user\entities\forms\decorators;
 
 
+use vloop\user\entities\interfaces\Form;
 use Yii;
 use yii\base\Model;
 use yii\helpers\VarDumper;
 
-class PostForm
+class PostForm implements Form
 {
     private $model;
 
@@ -16,7 +17,12 @@ class PostForm
         $this->model = $model;
     }
 
-    public function validated(): bool{
+    public function model(): Model
+    {
+        return $this->model;
+    }
+
+    public function validated(): bool {
         $post = Yii::$app->request->post();
         if($this->model->load($post, '') and $this->model->validate()){
             return true;
@@ -24,7 +30,12 @@ class PostForm
         return false;
     }
 
-    public function errors(): array {
+    public function fields(): array
+    {
+        $post = Yii::$app->request->post();
+        if($this->model->load($post, '') and $this->model->validate()){
+            return $this->model()->attributes();
+        }
         return $this->model->errors;
     }
 }

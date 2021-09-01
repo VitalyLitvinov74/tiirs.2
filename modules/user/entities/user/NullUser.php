@@ -6,7 +6,7 @@ namespace vloop\user\entities\user;
 
 use vloop\user\entities\interfaces\User;
 
-class ErrorUser implements User
+class NullUser implements User
 {
     private $self;
 
@@ -35,11 +35,7 @@ class ErrorUser implements User
      */
     function printYourself(): array
     {
-        return [
-            "errors"=>[
-                $this->self
-            ]
-        ];
+        return $this->self;
     }
 
     /**

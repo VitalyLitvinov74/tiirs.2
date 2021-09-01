@@ -39,20 +39,29 @@ class RestUser implements User
 
     /**
      * печатает себя в виде массива
+     * изменяем поля только аттрибутов
      */
     function printYourself(): array
     {
         $origArray = $this->origin->printYourself();
         if (!$this->needleFields) { //если был передан пустой массив.
-            return $origArray;
+            return $this->toJsonApi($origArray);
         }
-        $new = [];
-        foreach ($this->needleFields as $needleField) {
-            if (array_key_exists($needleField, $origArray)) {
-                $new[$needleField] = $origArray[$needleField];
+        if($this->notGuest()){
+            $attributes = [];
+            foreach ($this->needleFields as $needleField) {
+                if (array_key_exists($needleField, $origArray)) {
+                    $attributes[$needleField] = $origArray[$needleField];
+                }
             }
+            return $this->toJsonApi([
+                'type'=>'user',
+                'id'=>$this->id(),
+                'attributes'=>$attributes
+            ]);
         }
-        return $new;
+        return $this->toJsonApi($origArray, true);
+
     }
 
     function notGuest(): bool
@@ -66,7 +75,22 @@ class RestUser implements User
      */
     function login(string $password): array
     {
-        $origin = $this->origin->login($password);
+        $this->origin->login($password);
         return $this->printYourself(); //будет печатать текущего себя
+    }
+
+    private function toJsonApi(array $data, bool $isError = false): array{
+        if($isError){
+            return [
+                'errors'=>[
+                    $data
+                ]
+            ];
+        }
+        return [
+            'data'=>[
+                $data
+            ]
+        ];
     }
 }

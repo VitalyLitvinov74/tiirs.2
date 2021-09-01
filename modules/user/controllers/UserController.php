@@ -3,20 +3,15 @@
 
 namespace vloop\user\controllers;
 
-
-use http\Exception\InvalidArgumentException;
-use phpDocumentor\Reflection\DocBlock\Tags\Throws;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use vloop\user\entities\forms\CreateUserForm;
 use vloop\user\entities\forms\decorators\PostForm;
 use vloop\user\entities\forms\LoginForm;
-use vloop\user\entities\user\decorators\IdentityUser;
 use vloop\user\entities\user\decorators\RestUser;
 use vloop\user\entities\user\decorators\RestUsers;
-use vloop\user\entities\user\decorators\StaticUser;
-use vloop\user\entities\user\ErrorUser;
+use vloop\user\entities\user\NullUser;
 use vloop\user\entities\user\Users;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 
@@ -25,31 +20,54 @@ class UserController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access_token',
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'only' => ['login', 'logout', 'create'],
+            'rules' => [
+                [
+                    'allow' => true,
+//                    'actions' => ['login', 'create'],
+                    'roles' => ['?'],
+                ],
+//                [
+//                    'allow' => true,
+//                    'actions' => ['logout', 'create'],//TODO: Организовать RBAC непосредственно в экшене.
+//                    'roles' => ['@'],
+//                ],
+            ],
         ];
+//        $behaviors['authenticator'] = [
+//            'class' => QueryParamAuth::class,
+//            'tokenParam' => 'access_token',
+//            'only' => ['create', 'check-auth']
+//        ];
         return $behaviors;
     }
 
     public function actionLogin()
     {
+        //TODO: слишком много логики в контроллере. Упростить на след. этапе.
         $post = new PostForm(
             $form = new LoginForm()
         );
         if ($post->validated()) {
             $users = new RestUsers(
                 new Users(),
-                ['id', 'name', 'access_token', 'errors'] //белый список полей которые можно возвращать
+                ['name', 'access_token', 'errors'] //белый список полей которые можно возвращать
             );
             $user = $users->oneByCriteria(['login' => $form->login]);
             return $user->login($form->password);
         }
-        return (new ErrorUser($form->errors))->printYourself();
+        $restNull = new RestUser(
+            new NullUser($form->errors),
+            ['errors']
+        );
+        return $restNull->printYourself();
     }
 
     public function actionCreate()
     {
+        //TODO: слишком много логики в контроллере. Упростить на след. этапе.
         $post = new PostForm(
             $form = new CreateUserForm()
         );
@@ -57,19 +75,25 @@ class UserController extends Controller
         if ($post->validated()) {
             $users = new RestUsers(
                 new Users(),
-                ['id', 'name', 'login', 'errors']
+                ['name', 'login', 'errors']
             );
-            return $users
+            $newUser = $users
                 ->registerNew(
                     $form->name,
                     $form->login,
                     $form->password
-                )->printYourself();
+                );
+            return $newUser->printYourself();
         }
-        return (new ErrorUser($form->errors))->printYourself();
+        $restNull = new RestUser(
+            new NullUser($form->errors),
+            ['name', 'login', 'errors']
+        );
+        return $restNull->printYourself();
     }
 
-    public function actionCheckAuth(){
+    public function actionCheckAuth()
+    {
         return Yii::$app->user->isGuest;
     }
 

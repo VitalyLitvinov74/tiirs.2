@@ -71,8 +71,8 @@ class Users implements UsersInterface
                 $user['auth_key']
             );
         }
-        return new ErrorUser([
-            'title'=>'Пользователь с таким логином не найден.'
+        return new NullUser([
+            'login'=>'Пользователь с таким логином не найден.'
         ]);
     }
 
@@ -94,7 +94,7 @@ class Users implements UsersInterface
                 'auth_key' => $secure->generateRandomString(32)
             ]);
         } catch (Exception $e) {
-            return new ErrorUser(["title" => "Не удалось сгенерировать хеш пароля."]);
+            return new NullUser(["password" => "Не удалось сгенерировать хеш пароля."]);
         }
         try {
             if ($record->save()) {
@@ -105,11 +105,11 @@ class Users implements UsersInterface
                     $record->auth_key
                 );
             }
-            return new ErrorUser([
-                "title" => "Текущий пользователь уже существует."
+            return new NullUser([
+                "user" => "Текущий пользователь уже существует."
             ]);
         } catch (\yii\db\Exception $exception) {
-            return new ErrorUser([
+            return new NullUser([
                 "title" => "Не удалось сохранить данные в бд. Не хватает полей для записи.",
                 "fields" => $record->getAttributes()
             ]);
