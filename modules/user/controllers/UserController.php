@@ -22,15 +22,15 @@ use yii\rest\Controller;
 
 class UserController extends Controller
 {
-//    public function behaviors()
-//    {
-//        $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => QueryParamAuth::class,
-//            'tokenParam' => 'access_token',
-//        ];
-//        return $behaviors;
-//    }
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access_token',
+        ];
+        return $behaviors;
+    }
 
     public function actionLogin()
     {

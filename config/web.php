@@ -20,7 +20,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\UserIdentity',
+            'class'=>'yii\web\User',
+            'identityClass' => '\vloop\user\entities\user\decorators\IdentityUser',
             'enableAutoLogin' => true,
             'enableSession' => false,
         ],

@@ -8,6 +8,7 @@ use vloop\user\entities\interfaces\User;
 use vloop\user\entities\user\UserSQL;
 use vloop\user\tables\TableUsers;
 use Yii;
+use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 /**
  * Объект который поддерживает авторизацию через фремворк.

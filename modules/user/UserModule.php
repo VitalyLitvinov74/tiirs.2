@@ -30,7 +30,7 @@ class UserModule extends Module
                         Yii::$app->response->setStatusCode(422);
                     }
                 },
-            ]
+            ],
         ]);
     }
 }
