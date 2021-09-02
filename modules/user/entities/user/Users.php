@@ -94,7 +94,9 @@ class Users implements UsersInterface
                 'auth_key' => $secure->generateRandomString(32)
             ]);
         } catch (Exception $e) {
-            return new NullUser(["password" => "Не удалось сгенерировать хеш пароля."]);
+            return new NullUser(["password" => "Не удалось сгенерировать хеш пароля.",
+                    "message"=>$e->getMessage()
+                ]);
         }
         try {
             if ($record->save()) {
