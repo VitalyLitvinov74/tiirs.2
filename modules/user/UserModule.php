@@ -26,7 +26,7 @@ class UserModule extends Module
                 'class' => 'yii\web\Response',
                 'on beforeSend' => function ($event) {
                     $response = $event->sender;
-                    if ($response->data !== null and isset($response->data['errors'])) {
+                    if ($response->data !== null and isset($response->data['errors']) and !(Yii::$app instanceof \yii\console\Application)) {
                         Yii::$app->response->setStatusCode(422);
                     }
                 },

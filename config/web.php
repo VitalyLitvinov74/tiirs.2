@@ -59,6 +59,9 @@ $config = [
     'modules'=>[
         'user'=>[
             "class"=>'vloop\user\UserModule',
+        ],
+        'problems'=>[
+            'class'=> 'vloop\problems\ProblemsModule'
         ]
     ],
     'params' => $params,

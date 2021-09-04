@@ -7,7 +7,7 @@ namespace vloop\problems;
 use Yii;
 use yii\base\Module;
 
-class ProblemModule extends Module
+class ProblemsModule extends Module
 {
     public function init()
     {
