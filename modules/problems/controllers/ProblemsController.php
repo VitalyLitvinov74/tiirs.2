@@ -5,10 +5,14 @@ namespace vloop\problems\controllers;
 
 
 use Symfony\Component\DomCrawler\Form;
+use vloop\problems\entities\forms\AddProblemForm;
+use vloop\problems\entities\forms\ChangeReportForm;
 use vloop\problems\entities\forms\FormReport;
-use vloop\problems\entities\problem\decorators\ProblemById;
-use vloop\problems\entities\problem\ProblemsList;
-use vloop\problems\entities\report\ReportsList;
+use vloop\problems\entities\problem\decorators\ProblemByForm;
+use vloop\problems\entities\problem\ProblemsSQL;
+use vloop\problems\entities\report\ReportsByCriteriaForm;
+use vloop\problems\entities\report\ReportSQL;
+use vloop\problems\entities\report\ReportsSQL;
 use yii\filters\AccessControl;
 use yii\rest\Controller;
 
@@ -30,48 +34,51 @@ class ProblemsController extends Controller
     }
 
     public function actionAddProblem(){
-        $form = new Form();
-        $problems = new ProblemsList();
-        return $problems->addNew($form)->printYourself();
+        $form = new AddProblemForm();
+        $problems = new ProblemsSQL();
+        return $problems
+            ->addFromInputForm($form)
+            ->printYourself();
     }
 
     public function actionProblems()
     {
-        $problems = new ProblemsList();
+        $problems = new ProblemsSQL();
         return $problems->all();
     }
 
     public function actionAddReport()
     {
         $form = new FormReport();
-        $reports = new ReportsList();
-        $newReport = $reports->addNew($form);
-        return $newReport->printYourself();
+        $reports = new ReportsSQL();
+        return  $reports
+            ->addFromInputForm($form)
+            ->printYourself();
     }
 
-    public function changeReport()
+    public function actionChangeReport()
     {
-        $form = new FormReport();
-        $reports = new ReportsList();
-        $report = $reports->oneByCriteria(['id' => $form->validatedFields()['id']]);
-        $report->changeDescription($form);
-        return $report->printYourself();
+        $report = new ReportsByCriteriaForm(
+            new ReportsSQL(),
+            $inputData = new ChangeReportForm()
+        );
+        return $report
+            ->changeDescription($inputData)
+            ->printYourself();
     }
 
     public function actionChangeStatus()
     {
-        $problem =
-            new ProblemById( //может являться NullObject
-                $form = new FormReport(),
-                new ProblemsList()
-            );
-        return $problem->changeStatus($form);
+        $problems = new ProblemsSQL();
+        return $problem
+            ->changeStatus($form)
+            ->printYourself();
     }
 
     public function actionProblemsByDate()
     {
         //добавить декоратор по датам и вывести.
-        $problems = new ProblemsList();
+        $problems = new ProblemsSQL();
         return $problems->all();
     }
 }

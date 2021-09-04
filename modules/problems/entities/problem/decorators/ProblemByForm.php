@@ -8,7 +8,7 @@ use vloop\problems\entities\interfaces\EntitiesList;
 use vloop\problems\entities\interfaces\Form;
 use vloop\problems\entities\interfaces\Problem;
 use vloop\problems\entities\interfaces\Role;
-use vloop\problems\entities\problem\ProblemsList;
+use vloop\problems\entities\problem\ProblemsSQL;
 /**
  * характеризуется следующими параметрами:
  * 1. ид проблемы из формы поиска
@@ -17,12 +17,12 @@ use vloop\problems\entities\problem\ProblemsList;
  *
  * Проблема из списка по ИД в форме
 */
-class ProblemById implements Problem
+class ProblemByForm implements Problem
 {
     private $form;
     private $list;
 
-    public function __construct(Form $form, ProblemsList $list) {
+    public function __construct(Form $form, ProblemsSQL $list) {
         $this->list = $list;
         $this->form = $form;
     }

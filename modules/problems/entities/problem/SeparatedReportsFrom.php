@@ -1,16 +1,18 @@
 <?php
 
 
-namespace vloop\problems\entities\report;
+namespace vloop\problems\entities\problem;
 
 
 use vloop\problems\entities\interfaces\EntitiesList;
 use vloop\problems\entities\interfaces\Entity;
 use vloop\problems\entities\interfaces\Form;
 
-class ReportsList implements EntitiesList
+class SeparatedReportsFrom implements EntitiesList
 {
-    public function __construct() { }
+    private $form;
+
+    public function __construct(Form $form) { }
 
     /**
      * @return Entity[]
@@ -26,7 +28,7 @@ class ReportsList implements EntitiesList
      */
     public function addFromInputForm(Form $form): Entity
     {
-        // TODO: Implement addNew() method.
+        // TODO: Implement addFromInputForm() method.
     }
 
     public function oneByCriteria(array $criteria): Entity
