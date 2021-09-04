@@ -33,3 +33,4 @@ tests/_support/_generated
 /.vagrant
 /.idea
 /config/db.php
+config/db.php
