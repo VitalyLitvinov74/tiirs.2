@@ -11,11 +11,14 @@ use vloop\problems\entities\forms\inputed\ChangeStatusProblemForm;
 use vloop\problems\entities\forms\inputed\InputsForChangeReport;
 use vloop\problems\entities\problem\decorators\ProblemByForm;
 use vloop\problems\entities\problem\decorators\ProblemsByDates;
+use vloop\problems\entities\problem\decorators\RestProblem;
 use vloop\problems\entities\problem\ProblemByCriteriaForm;
 use vloop\problems\entities\problem\ProblemsSQL;
 use vloop\problems\entities\report\ReportByCriteriaForm;
 use vloop\problems\entities\report\ReportSQL;
 use vloop\problems\entities\report\ReportsSQL;
+use vloop\problems\entities\rest\RestEntities;
+use vloop\problems\entities\rest\RestEntity;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
@@ -40,13 +43,31 @@ class ProblemsController extends Controller
 
     public function actionProblems()
     {
-        $problems = new ProblemsSQL();
-        $problems->all();
+        $problems = new RestEntities(
+            new ProblemsSQL(),
+            'problem'
+        );
+        return $problems->all();
+    }
+
+    public function actionProblem($id)
+    {
+        $problems = new RestEntities(
+            new ProblemsSQL(),
+            'problem'
+        );
+        return $problems
+            ->oneByCriteria(['id' => $id])
+            ->printYourself();
     }
 
     public function actionAddProblem()
     {
-        $problems = new ProblemsSQL();
+        $problems =
+            new RestEntities(
+                new ProblemsSQL(),
+                'problem'
+            );
         return $problems
             ->addFromInput(new AddProblemForm())
             ->printYourself();

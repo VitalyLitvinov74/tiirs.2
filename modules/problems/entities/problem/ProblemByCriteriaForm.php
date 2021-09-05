@@ -23,7 +23,7 @@ class ProblemByCriteriaForm implements Problem
     private function entity(): Problem{
         $fields = $this->form->validatedFields();
         if($fields){
-            $this->problems->oneByCriteria($fields);
+            return $this->problems->oneByCriteria($fields);
         }
         return new NullProblem([]);
     }
