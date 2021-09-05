@@ -43,7 +43,7 @@ class ProblemsByDates implements EntitiesList
     private function criteria(array $fields){
         $exec = $fields['period_of_execution'];
         $timeCreation = $fields['time_of_creation'];
-        if($exec > 0){
+        if($exec > 1630849778){ //точка старта компьютерной эпохи
             return [
                 'and',
                 ['>', 'time_of_creation', $timeCreation],

@@ -24,7 +24,7 @@ class AddProblemForm extends AbstractForm
         return [
             [['author_id', 'description'], 'required'],
             ['time_of_creation', 'default', 'value' => time()],
-            ['period_of_execution', 'default', 'value' => 0],
+            ['period_of_execution', 'default', 'value' => 1630849778],//точка старта компьютерной эпохи
             [['status', 'description'], 'string'],
             [['author_id', 'period_of_execution', 'time_of_creation'],'integer']
         ];

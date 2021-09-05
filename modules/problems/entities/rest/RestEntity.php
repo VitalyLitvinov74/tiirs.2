@@ -19,7 +19,8 @@ class RestEntity implements Entity
      * @param string $entityType - тип сущности
      * @param array $needleAttributes - атрибуты которые можно выводить
      */
-    public function __construct(Entity $entity, string $entityType, array $needleAttributes = []) {
+    public function __construct(Entity $entity, string $entityType, array $needleAttributes = [])
+    {
         $this->needleFields = $needleAttributes;
         $this->origin = $entity;
         $this->originType = $entityType;
@@ -32,25 +33,45 @@ class RestEntity implements Entity
 
     public function printYourself(): array
     {
+        if ($this->origin->notNull()) {
+            return [
+                'data' => [
+                    "type" => $this->originType,
+                    "id" => $this->id(),
+                    "attributes" => $this->attributes()
+                ]
+            ];
+        }
         return [
-            'data'=>[
-                "type"=>$this->originType,
-                "id"=>$this->id(),
-                "attributes"=> $this->attributes()
-            ]
+            'errors'=>$this->errors()
         ];
     }
 
-    private function attributes(){
+    private function errors():array {
+        $errors = $this->origin->printYourself();
+        $retErrors = [];
+        foreach ($errors as $attribute=>$errorsAttribute){
+            foreach($errorsAttribute as $concreteError){
+                $retErrors[] = [
+                    "title"=>$attribute,
+                    "message"=> $concreteError
+                ];
+            }
+        }
+        return $retErrors;
+    }
+
+    private function attributes()
+    {
         $origArray = $this->origin->printYourself();
         $attributes = [];
-        if($this->needleFields){
-            foreach ($this->needleFields as $needleField){
+        if ($this->needleFields) {
+            foreach ($this->needleFields as $needleField) {
                 if (array_key_exists($needleField, $origArray)) {
                     $attributes[$needleField] = $origArray[$needleField];
                 }
             }
-        }else{
+        } else {
             $attributes = $origArray;
             unset($attributes['id']);
         }

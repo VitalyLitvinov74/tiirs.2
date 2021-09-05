@@ -10,6 +10,9 @@ use vloop\problems\entities\interfaces\Problem;
 use vloop\problems\entities\interfaces\EntitiesList;
 use vloop\problems\tables\TableProblems;
 use yii\base\Model;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
+use yii\di\NotInstantiableException;
 use yii\helpers\VarDumper;
 
 class ProblemsSQL implements EntitiesList
@@ -34,10 +37,10 @@ class ProblemsSQL implements EntitiesList
     public function oneByCriteria(array $criteria): Entity
     {
         $record = TableProblems::find()->where($criteria)->one();
-        if($record){
+        if ($record) {
             return new ProblemSQL($record->id);
         }
-        return new NullProblem(['problem'=>'Проблема не найдена.']);
+        return new NullProblem(['problem' => 'Проблема не найдена.']);
     }
 
     /**
@@ -47,16 +50,36 @@ class ProblemsSQL implements EntitiesList
     public function addFromInput(Form $form): Entity
     {
         $fields = $form->validatedFields();
-        if($fields){
+        if ($fields) {
             $record = new TableProblems($fields);
-            $record->save();
-            return new ProblemSQL($record->id);
+            try {
+                if($record->save()){
+                    return new ProblemSQL($record->id);
+                }else{
+                    return new NullProblem($record->errors);
+                }
+            } catch (StaleObjectException $e) {
+                return new NullProblem([
+                    'title'=>$e->getName(),
+                    'message'=>$e->getMessage()
+                ]);
+            } catch (Exception $e) {
+                return new NullProblem([
+                    'title' => $e->getName(),
+                    'message' => $e->getMessage()
+                ]);
+            } catch (NotInstantiableException $e){
+                return new NullProblem([
+                    'title'=> $e->getName(),
+                    'message'=>$e->getMessage()
+                ]);
+            }
         }
         return new NullProblem($form->errors());
     }
 
     public function remove(Entity $entity): bool
     {
-        return TableProblems::deleteAll(['id'=>$entity->id()]);
+        return TableProblems::deleteAll(['id' => $entity->id()]);
     }
 }

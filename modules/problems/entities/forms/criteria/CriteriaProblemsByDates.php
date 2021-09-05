@@ -18,7 +18,8 @@ class CriteriaProblemsByDates extends AbstractForm
         return [
             [['time_of_created'], 'required'],
             [['time_of_created', 'period_of_execution'], 'int'],
-            ['period_of_execution', 'default', 'value' => 0]
+            //точка старта компьютерной эпохи
+            ['period_of_execution', 'default', 'value' => 1630849778]
         ];
     }
 }
