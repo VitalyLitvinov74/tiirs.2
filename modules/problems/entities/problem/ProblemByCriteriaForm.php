@@ -3,54 +3,49 @@
 
 namespace vloop\problems\entities\problem;
 
+
+use vloop\problems\entities\interfaces\EntitiesList;
 use vloop\problems\entities\interfaces\Entity;
 use vloop\problems\entities\interfaces\Form;
 use vloop\problems\entities\interfaces\Problem;
 use vloop\problems\entities\interfaces\Role;
-use vloop\problems\entities\report\NullReport;
-use vloop\problems\tables\TableProblems;
-use vloop\problems\tables\TableProblemsUsers;
 
-class ProblemSQL implements Problem
+class ProblemByCriteriaForm implements Problem
 {
+    private $form;
+    private $problems;
 
-    private $id;
+    public function __construct(EntitiesList $problems, Form $form) {
+        $this->form = $form;
+        $this->problems = $problems;
+    }
 
-    public function __construct(int $id) {
-        $this->id = $id;
+    private function entity(): Problem{
+        $fields = $this->form->validatedFields();
+        if($fields){
+            $this->problems->oneByCriteria($fields);
+        }
+        return new NullProblem([]);
     }
 
     public function id(): int
     {
-        return $this->id;
+        return $this->entity()->id();
     }
 
     public function printYourself(): array
     {
-        return $this->record()->toArray();
-    }
-
-    private $record = false;
-
-    /**
-     * @return null|array|bool|TableProblems|\yii\db\ActiveRecord
-     */
-    private function record(){
-        if($this->record !== false){
-            return $this->record;
-        }
-        $this->record = TableProblems::find()->where(['id'=>$this->id()])->one();
-        return $this->record;
+        return $this->entity()->printYourself();
     }
 
     public function changeLineData(Form $form): Entity
     {
-        return new NullReport([]);
+        return $this->entity()->changeLineData($form);
     }
 
     public function notNull(): bool
     {
-        return true;
+        return $this->entity()->notNull();
     }
 
     /**
@@ -61,7 +56,7 @@ class ProblemSQL implements Problem
      */
     public function attachUser(int $id, Role $userRoleInProblem): Entity
     {
-        return $this;
+        return $this->entity()->attachUser($id, $userRoleInProblem);
     }
 
     /**
@@ -73,6 +68,6 @@ class ProblemSQL implements Problem
      */
     public function detachUser(int $id): Entity
     {
-        return $this;
+        return $this->entity()->detachUser($id);
     }
 }

@@ -3,17 +3,22 @@
 
 namespace vloop\problems\controllers;
 
-
-use Symfony\Component\DomCrawler\Form;
-use vloop\problems\entities\forms\AddProblemForm;
-use vloop\problems\entities\forms\ChangeReportForm;
+use vloop\problems\entities\forms\criteria\CriteriaIDEntity;
+use vloop\problems\entities\forms\criteria\CriteriaProblemsByDates;
 use vloop\problems\entities\forms\FormReport;
+use vloop\problems\entities\forms\inputed\AddProblemForm;
+use vloop\problems\entities\forms\inputed\ChangeStatusProblemForm;
+use vloop\problems\entities\forms\inputed\InputsForChangeReport;
 use vloop\problems\entities\problem\decorators\ProblemByForm;
+use vloop\problems\entities\problem\decorators\ProblemsByDates;
+use vloop\problems\entities\problem\ProblemByCriteriaForm;
 use vloop\problems\entities\problem\ProblemsSQL;
-use vloop\problems\entities\report\ReportsByCriteriaForm;
+use vloop\problems\entities\report\ReportByCriteriaForm;
 use vloop\problems\entities\report\ReportSQL;
 use vloop\problems\entities\report\ReportsSQL;
+use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\rest\Controller;
 
 class ProblemsController extends Controller
@@ -33,52 +38,57 @@ class ProblemsController extends Controller
         return $behaviors;
     }
 
-    public function actionAddProblem(){
-        $form = new AddProblemForm();
-        $problems = new ProblemsSQL();
-        return $problems
-            ->addFromInputForm($form)
-            ->printYourself();
-    }
-
     public function actionProblems()
     {
         $problems = new ProblemsSQL();
-        return $problems->all();
+        $problems->all();
     }
 
-    public function actionAddReport()
+    public function actionAddProblem()
     {
-        $form = new FormReport();
-        $reports = new ReportsSQL();
-        return  $reports
-            ->addFromInputForm($form)
-            ->printYourself();
-    }
-
-    public function actionChangeReport()
-    {
-        $report = new ReportsByCriteriaForm(
-            new ReportsSQL(),
-            $inputData = new ChangeReportForm()
-        );
-        return $report
-            ->changeDescription($inputData)
+        $problems = new ProblemsSQL();
+        return $problems
+            ->addFromInput(new AddProblemForm())
             ->printYourself();
     }
 
     public function actionChangeStatus()
     {
-        $problems = new ProblemsSQL();
+        $problem = new ProblemByCriteriaForm(
+            new ProblemsSQL(),
+            new CriteriaIDEntity()
+        );
         return $problem
-            ->changeStatus($form)
+            ->changeLineData(new ChangeStatusProblemForm())
+            ->printYourself();
+    }
+
+    public function actionAddReport()
+    {
+        $reports = new ReportsSQL();
+        return $reports
+            ->addFromInput(new FormReport())
+            ->printYourself();
+    }
+
+    public function actionChangeReport()
+    {
+        $report =
+            new ReportByCriteriaForm(
+                new ReportsSQL(),
+                new CriteriaIDEntity()
+            );
+        return $report
+            ->changeLineData(new InputsForChangeReport())
             ->printYourself();
     }
 
     public function actionProblemsByDate()
     {
-        //добавить декоратор по датам и вывести.
-        $problems = new ProblemsSQL();
+        $problems = new ProblemsByDates(
+            new ProblemsSQL(),
+            new CriteriaProblemsByDates()
+        );
         return $problems->all();
     }
 }

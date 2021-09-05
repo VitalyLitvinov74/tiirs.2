@@ -10,6 +10,7 @@ use vloop\problems\entities\interfaces\Problem;
 use vloop\problems\entities\interfaces\EntitiesList;
 use vloop\problems\tables\TableProblems;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 
 class ProblemsSQL implements EntitiesList
 {
@@ -43,13 +44,13 @@ class ProblemsSQL implements EntitiesList
      * @param Form $form - форма, которая выдает провалидированные данные
      * @return Entity - Проблема которую нужно решить
      */
-    public function addFromInputForm(Form $form): Entity
+    public function addFromInput(Form $form): Entity
     {
-        if($form->validatedFields()){
-            $fields = $form->validatedFields();
-            $record = new TableProblems();
-            $record->load($fields,'');
+        $fields = $form->validatedFields();
+        if($fields){
+            $record = new TableProblems($fields);
             $record->save();
+            return new ProblemSQL($record->id);
         }
         return new NullProblem($form->errors());
     }

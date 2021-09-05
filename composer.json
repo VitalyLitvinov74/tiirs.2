@@ -73,7 +73,8 @@
     "autoload": {
         "psr-4": {
             "vloop\\user\\": "modules/user",
-            "vloop\\problems\\": "modules/problems"
+            "vloop\\problems\\": "modules/problems",
+            "vloop\\forms\\": "modules/forms"
         }
     }
 }

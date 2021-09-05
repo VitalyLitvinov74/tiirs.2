@@ -26,21 +26,40 @@ class ProblemsByDates implements EntitiesList
     }
 
     /**
-     * @param array $criteria
      * @return Entity[]
      */
-    public function all(array $criteria = []): array
+    public function all(): array
     {
-        $all = $this->origin->all();
+        $fields = $this->dateForm->validatedFields();
+        if($fields){
+            $criteria = $this->criteria($fields);
+            $all = TableProblems::find()->where($criteria)->all();
+            return $all;
+        }
+        return [];
+
+    }
+
+    private function criteria(array $fields){
+        $exec = $fields['period_of_execution'];
+        $timeCreation = $fields['time_of_creation'];
+        if($exec > 0){
+            return [
+                'and',
+                ['>', 'time_of_creation', $timeCreation],
+                ['<', 'period_of_execution', $exec]
+            ];
+        }
+        return ['>', 'time_of_creation', $timeCreation];
     }
 
     /**
      * @param Form $form - форма, которая выдает провалидированные данные
      * @return Entity - Проблема которую нужно решить
      */
-    public function addFromInputForm(Form $form): Entity
+    public function addFromInput(Form $form): Entity
     {
-        return $this->origin->addFromInputForm($form);
+        return $this->origin->addFromInput($form);
     }
 
     public function oneByCriteria(array $criteria): Entity
