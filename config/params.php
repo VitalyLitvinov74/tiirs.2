@@ -6,8 +6,8 @@ return [
     'senderName' => 'Example.com mailer',
     'dee.migration.path'=>[
         'app\migrations',
-        'modules\problems\migrations',
-        'modules\user\migrations',
+        'vloop\problems\migrations',
+        'vloop\user\migrations',
         '@yii/rbac/migrations'
     ]
 ];
