@@ -22,7 +22,7 @@ $config = [
         ],
         'user' => [
             'class'=>'yii\web\User',
-            'identityClass' => '\vloop\user\entities\user\decorators\IdentityUser',
+            'identityClass' => '@vendor\vloop\users\entities\user\decorators\IdentityUser',
             'enableAutoLogin' => true,
             'enableSession' => false,
         ],
@@ -58,10 +58,10 @@ $config = [
     ],
     'modules'=>[
         'user'=>[
-            "class"=>'vloop\user\UserModule',
+            "class"=>'@vendor\vloop\users\UserModule',
         ],
         'problems'=>[
-            'class'=> 'vloop\problems\ProblemsModule'
+            'class'=> '@vendor\vloop\problems\ProblemsModule'
         ]
     ],
     'params' => $params,

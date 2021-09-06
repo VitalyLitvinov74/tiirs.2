@@ -12,11 +12,10 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
-        "@vloop"=>'/vloop'
     ],
     'modules'=>[
         'user'=>[
-            "class"=>'vloop\user\UserModule'
+            "class"=>'vloop\users\UserModule'
         ]
     ],
     'components' => [
