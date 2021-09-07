@@ -34,3 +34,4 @@ tests/_support/_generated
 /.idea
 /config/db.php
 config/db.php
+vloop/*
