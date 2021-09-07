@@ -58,10 +58,10 @@ $config = [
     ],
     'modules'=>[
         'user'=>[
-            "class"=>'@vendor\vloop\users\UserModule',
+            "class"=>'vloop\users\UserModule',
         ],
         'problems'=>[
-            'class'=> '@vendor\vloop\problems\ProblemsModule'
+            'class'=> 'vloop\problems\ProblemsModule'
         ]
     ],
     'params' => $params,

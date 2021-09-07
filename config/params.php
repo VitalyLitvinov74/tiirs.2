@@ -5,9 +5,9 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'dee.migration.path'=>[
-        'app\migrations',
-        '@vendor/vloop/problems/migrations',
-        '@vendor/vloop/users/migrations',
+        '@app/migrations',
+        '@vloop/problems/migrations',
+        '@vloop/users/migrations',
         '@yii/rbac/migrations'
     ]
 ];

@@ -19,8 +19,7 @@
         "yiisoft/yii2-bootstrap4": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
       "ext-json": "*",
-        "deesoft/yii2-console": "^1.1",
-        "vloop/users": "~1.0.0"
+        "deesoft/yii2-console": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -32,7 +31,9 @@
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-yii2": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0"
+        "codeception/module-asserts": "^1.0.0",
+        "vloop/users": "dev-master",
+        "vloop/problems": "dev-master"
     },
     "config": {
         "process-timeout": 1800,
@@ -72,11 +73,11 @@
         },
         {
             "type": "path",
-            "url": "vloop/users"
+            "url": "../vloop/users"
         },
         {
             "type": "path",
-            "url": "vloop/problems"
+            "url": "../vloop/problems"
         }
     ]
 }
