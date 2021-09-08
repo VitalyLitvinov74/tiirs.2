@@ -74,6 +74,14 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "path",
+            "url": "../vloop/users"
+        },
+        {
+            "type": "path",
+            "url": "../vloop/problems"
         }
     ]
 }
