@@ -42,6 +42,10 @@
         }
     },
     "scripts": {
+        "pre-update-cmd":  [
+            "php -r \"mkdir('../vloop/users', 0655, true);\"",
+            "php -r \"mkdir('../vloop/problems', 0655, true);\""
+        ],
         "post-install-cmd": [
             "yii\\composer\\Installer::postInstall"
         ],
