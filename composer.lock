@@ -946,29 +946,21 @@
         {
             "name": "vloop/problems",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/VitalyLitvinov74/vloop.problems.git",
-                "reference": "b67946897c14b885aa7234cca022630435e227d1"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/VitalyLitvinov74/vloop.problems/zipball/b67946897c14b885aa7234cca022630435e227d1",
-                "reference": "b67946897c14b885aa7234cca022630435e227d1",
-                "shasum": ""
+                "type": "path",
+                "url": "../vloop/problems",
+                "reference": "07e4ff88682b213ac4245deaecb6db54380d5fa9"
             },
             "require": {
                 "php": ">=7.1",
                 "yiisoft/yii2": "~2.0.0"
             },
-            "default-branch": true,
             "type": "yii2-extension",
             "autoload": {
                 "psr-4": {
                     "vloop\\problems\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -981,43 +973,33 @@
             ],
             "description": "Package",
             "keywords": [
-                "Tasks",
                 "module",
                 "problems",
+                "tasks",
                 "yii2"
             ],
-            "support": {
-                "issues": "https://github.com/VitalyLitvinov74/vloop.problems/issues",
-                "source": "https://github.com/VitalyLitvinov74/vloop.problems/tree/master"
-            },
-            "time": "2021-09-07T08:38:21+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "vloop/users",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/VitalyLitvinov74/vloop.users.git",
-                "reference": "92512ff4ab834c8f739eebba7c00bd5008db0662"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/VitalyLitvinov74/vloop.users/zipball/92512ff4ab834c8f739eebba7c00bd5008db0662",
-                "reference": "92512ff4ab834c8f739eebba7c00bd5008db0662",
-                "shasum": ""
+                "type": "path",
+                "url": "../vloop/users",
+                "reference": "e7ece739957ed6f77abffea97f47ea682615e009"
             },
             "require": {
                 "php": ">=7.1",
                 "yiisoft/yii2": "~2.0.0"
             },
-            "default-branch": true,
             "type": "yii2-extension",
             "autoload": {
                 "psr-4": {
                     "vloop\\users\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1030,15 +1012,13 @@
             ],
             "description": "Package",
             "keywords": [
-                "Users",
                 "module",
+                "users",
                 "yii2"
             ],
-            "support": {
-                "issues": "https://github.com/VitalyLitvinov74/vloop.users/issues",
-                "source": "https://github.com/VitalyLitvinov74/vloop.users/tree/master"
-            },
-            "time": "2021-09-07T08:02:04+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "yiisoft/yii2",
