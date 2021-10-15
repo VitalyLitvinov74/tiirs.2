@@ -4,7 +4,11 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './web/js/index.js',
+    entry: './vue/app.js',
+    output: {
+        path: path.join(__dirname, 'web').join(__dirname, 'js'),
+        filename: 'vue.js'
+    },
     module: {
         rules: [
             {
@@ -26,10 +30,8 @@ module.exports = {
                 ]
             }
         ],
-
-
     },
     plugins: [
         new VueLoaderPlugin()
-    ],
+    ]
 };

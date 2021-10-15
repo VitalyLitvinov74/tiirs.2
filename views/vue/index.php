@@ -2,7 +2,10 @@
     <transition>
         <router-view></router-view>
     </transition>
-    <!--        <div v-if="this.$route.matched.length == 0">-->
-    <!--            --><?//= $content ?>
-    <!--        </div>-->
 </div>
+<?php
+$this->view->registerJs('
+        new window.Vue({
+            el: "#app",
+        })', $this->view::POS_END);
+?>

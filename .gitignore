@@ -36,3 +36,4 @@ tests/_support/_generated
 config/db.php
 vloop/*
 node_modules/*
+vue/node_modules/*
