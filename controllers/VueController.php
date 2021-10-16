@@ -9,6 +9,8 @@ use yii\web\Controller;
 
 class VueController extends Controller
 {
+    public $layout = '@app/views/layouts/vue.php';
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();

@@ -1,12 +1,12 @@
-import {VueLoaderPlugin} from "vue-loader";
+const { VueLoaderPlugin } = require('vue-loader')
 
 const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './vue/app.js',
+    entry: './src/app.js',
     output: {
-        path: path.join(__dirname, 'web').join(__dirname, 'js'),
+        path: path.join(__dirname, '../web/js'),
         filename: 'vue.js'
     },
     module: {
@@ -33,5 +33,10 @@ module.exports = {
     },
     plugins: [
         new VueLoaderPlugin()
-    ]
+    ],
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.js'
+        },
+    },
 };

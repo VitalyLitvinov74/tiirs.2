@@ -11,13 +11,14 @@ class VueAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $js = [
-        "js/vue.js"
+        "js/vue.js",
+        "js/include-vue.js"
     ];
     public $css = [
         'css/vue.css',
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        'yii\bootstrap4\BootstrapAsset',
     ];
 }
