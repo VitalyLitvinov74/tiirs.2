@@ -45,7 +45,7 @@
     "scripts": {
         "pre-update-cmd":  [
             "php -r \"mkdir('../vloop/users', 0755, true);\"",
-            "php -r \"mkdir('../vloop/problems', 0755, true);\""
+            "php -r \"mkdir('../vloop/problems', 0755, true);\"",
             "php -r \"mkdir('../vloop/gis', 0755, true);\""
         ],
         "post-install-cmd": [
