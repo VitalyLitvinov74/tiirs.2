@@ -76,18 +76,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "path",
-            "url": "../vloop/users"
-        },
-        {
-            "type": "path",
-            "url": "../vloop/problems"
-        },
-        {
-            "type": "path",
-            "url": "../vloop/gis"
         }
     ],
     "minimum-stability": "dev",
