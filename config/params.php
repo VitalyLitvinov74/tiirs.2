@@ -8,6 +8,7 @@ return [
         '@app/migrations',
         '@vloop/problems/migrations',
         '@vloop/users/migrations',
-        '@yii/rbac/migrations'
+        '@vloop/gis/migrations',
+        '@yii/rbac/migrations',
     ]
 ];

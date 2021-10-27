@@ -62,6 +62,9 @@ $config = [
         ],
         'problems'=>[
             'class'=> 'vloop\problems\ProblemsModule'
+        ],
+        'gis'=>[
+            'class'=> 'vloop\gis\GisModule'
         ]
     ],
     'params' => $params,
