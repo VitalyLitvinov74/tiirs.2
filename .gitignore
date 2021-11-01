@@ -37,3 +37,5 @@ config/db.php
 vloop/*
 node_modules/*
 vue/node_modules/*
+/docker/.env
+/db/*

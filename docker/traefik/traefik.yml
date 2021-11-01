@@ -1,0 +1,26 @@
+api:
+#  dashboard: true
+#  insecure: true
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+#log:
+#  level: DEBUG
+
+certificatesResolvers:
+  http:
+    acme:
+      email: info@ulu.world
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: http
+
