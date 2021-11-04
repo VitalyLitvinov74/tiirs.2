@@ -4,7 +4,10 @@
 namespace app\controllers;
 
 
+use vloop\entities\decorators\ResetKeysOnListEntities;
+use vloop\users\oop\entities\UsersSQL;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 
 class AuthController extends Controller
@@ -21,7 +24,7 @@ class AuthController extends Controller
         return $this->render('login');
     }
 
-    public function actionCreateFirstUser(){
-        return $this->render('create-first-user');
+    public function actionCreateUser(){
+        return $this->render('create-user');
     }
 }
