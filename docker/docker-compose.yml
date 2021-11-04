@@ -2,7 +2,7 @@ version: "3.2"
 services:
   traefik:
     image: traefik:latest
-    container_name: traefik
+    container_name: traefik-tiirs2
     restart: unless-stopped
     command:
 #      - --api.insecure=true
@@ -34,7 +34,7 @@ services:
             PHP_MEM_LIMIT: ${PHP_MEM_LIMIT}
             PHP_ERR_REPORT: ${PHP_ERR_REPORT}
             UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE}
-    container_name: php-fpm1
+    container_name: php-tiirs2
     networks:
       - backend
     env_file:
@@ -53,7 +53,7 @@ services:
             PHP_MEM_LIMIT: ${PHP_MEM_LIMIT}
             PHP_ERR_REPORT: ${PHP_ERR_REPORT}
             UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE}
-    container_name: php-cli
+    container_name: php-cli-tiirs2
     networks:
       - backend
     env_file:
@@ -71,7 +71,7 @@ services:
       - ../:/var/www/html/
 
   apache:
-    container_name: apache
+    container_name: apache-tiirs2
     build: 
       context: ./apache/
       args:
@@ -121,19 +121,17 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: mysql-tiirs2
     networks:
       - backend
     env_file:
       - .env
     ports:
       - "${MYSQL_PORT}:3306"
-    volumes:
-      - ../db:/var/lib/mysql
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
 
   adminer:
-    container_name: adminer
+    container_name: adminer-tiirs2
     image: adminer
     restart: always
     ports:

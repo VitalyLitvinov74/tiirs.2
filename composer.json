@@ -44,9 +44,9 @@
     },
     "scripts": {
         "pre-update-cmd":  [
-            "php -r \"mkdir('../vloop/users', 0755, true);\"",
-            "php -r \"mkdir('../vloop/problems', 0755, true);\"",
-            "php -r \"mkdir('../vloop/gis', 0755, true);\""
+            "php -r \"mkdir('vloop/vloop.users', 0755, true);\"",
+            "php -r \"mkdir('vloop/vloop.problems', 0755, true);\"",
+            "php -r \"mkdir('vloop/vloop.gis', 0755, true);\""
         ],
         "post-install-cmd": [
             "yii\\composer\\Installer::postInstall"
@@ -79,15 +79,7 @@
         },
         {
             "type": "path",
-            "url": "../vloop/users"
-        },
-        {
-            "type": "path",
-            "url": "../vloop/problems"
-        },
-        {
-            "type": "path",
-            "url": "../vloop/gis"
+            "url": "vloop/vloop.users"
         }
     ],
     "minimum-stability": "dev",

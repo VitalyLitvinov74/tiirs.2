@@ -31,7 +31,7 @@ class AuthAsset extends AssetBundle
         "js/dropdown.js",
         "js/sidebar-mini.js",
         "js/app.js",
-        "js/app-settings.js",
+//        "js/app-settings.js",
     ];
 
     public $depends = [

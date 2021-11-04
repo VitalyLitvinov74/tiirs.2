@@ -29,7 +29,7 @@ RUN docker-php-ext-install \
         sockets
 RUN curl -sS https://getcomposer.org/installer | \
             php -- --install-dir /usr/local/bin --filename composer --version ${COMPOSER_VER}
-
+RUN pecl install xdebug-3.1.1 && docker-php-ext-enable xdebug
 ARG PHP_EXEC_TIME
 ARG PHP_MEM_LIMIT
 ARG PHP_ERR_REPORT
@@ -39,3 +39,4 @@ RUN echo "memory_limit=${PHP_MEM_LIMIT}" > $PHP_INI_DIR/conf.d/memory-limit.ini
 RUN echo "max_execution_time = ${PHP_EXEC_TIME}" > $PHP_INI_DIR/conf.d/php_max_execution_time.ini
 RUN echo "error_reporting = ${PHP_ERR_REPORT}" > $PHP_INI_DIR/conf.d/php_error_reporting.ini
 RUN echo "upload_max_filesize=${UPLOAD_MAX_FILESIZE}" > $PHP_INI_DIR/conf.d/upload_max_filesize.ini
+COPY ini/xdebug.ini $PHP_INI_DIR/conf.d

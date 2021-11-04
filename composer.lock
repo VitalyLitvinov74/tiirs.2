@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a3bc72f1d306b3bb55a64986080c078",
+    "content-hash": "c96d56781dbca99f8a106a955d2dc961",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -1094,29 +1094,22 @@
         {
             "name": "vloop/users",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/VitalyLitvinov74/vloop.users.git",
-                "reference": "92512ff4ab834c8f739eebba7c00bd5008db0662"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/VitalyLitvinov74/vloop.users/zipball/92512ff4ab834c8f739eebba7c00bd5008db0662",
-                "reference": "92512ff4ab834c8f739eebba7c00bd5008db0662",
-                "shasum": ""
+                "type": "path",
+                "url": "vloop/vloop.users",
+                "reference": "42a531d07ac03ea6cf1e2abd0c892d0a49443697"
             },
             "require": {
                 "php": ">=7.1",
+                "vloop/entities": "dev-master",
                 "yiisoft/yii2": "~2.0.0"
             },
-            "default-branch": true,
             "type": "yii2-extension",
             "autoload": {
                 "psr-4": {
                     "vloop\\users\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1129,15 +1122,13 @@
             ],
             "description": "Package",
             "keywords": [
-                "Users",
                 "module",
+                "users",
                 "yii2"
             ],
-            "support": {
-                "issues": "https://github.com/VitalyLitvinov74/vloop.users/issues",
-                "source": "https://github.com/VitalyLitvinov74/vloop.users/tree/master"
-            },
-            "time": "2021-09-07T08:02:04+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "yiisoft/yii2",

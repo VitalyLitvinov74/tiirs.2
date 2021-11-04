@@ -21,10 +21,10 @@ use yii\web\View;
     <?php $this->head() ?>
 </head>
 
-<body class="layout-login" id="auth">
+<body class="layout-login">
 <?=$this->beginBody()?>
 <div class="layout-login__overlay"></div>
-<div class="layout-login__form bg-white" data-simplebar>
+<div class="layout-login__form bg-white" id="auth" data-simplebar>
     <div class="d-flex justify-content-center mt-2 mb-5 navbar-light">
         <a href="index.html" class="navbar-brand" style="min-width: 0">
             <img class="navbar-brand-icon" src="images/stack-logo-blue.svg" width="25" alt="ТОиРУс 3.0">
