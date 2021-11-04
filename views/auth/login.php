@@ -78,9 +78,6 @@ $this->registerJs(<<<JS
                 }
             }
         },
-        mounted(){
-            console.log('mounted')
-        },
         methods: {
             sendForm: function(){
                 this.cleanErrors();
@@ -134,7 +131,6 @@ $this->registerJs(<<<JS
                 this.password.invalid = false;
                 this.login.invalid = false;
             }
-            
         }
     });
 JS
