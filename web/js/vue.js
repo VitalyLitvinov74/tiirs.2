@@ -304,6 +304,17 @@ eval("var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function
 
 /***/ }),
 
+/***/ "./src/helpers/axios.helpers.js":
+/*!**************************************!*\
+  !*** ./src/helpers/axios.helpers.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar helpers = {\n  toFormData: function toFormData(store) {\n    var form = new FormData();\n\n    for (var key in store) {\n      form.append(key, store[key]);\n    }\n\n    return form;\n  }\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (helpers);\n\n//# sourceURL=webpack://tiirs-new-version/./src/helpers/axios.helpers.js?");
+
+/***/ }),
+
 /***/ "./src/main.js":
 /*!*********************!*\
   !*** ./src/main.js ***!
@@ -311,7 +322,7 @@ eval("var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);\n\n\nwindow.Vue = (vue__WEBPACK_IMPORTED_MODULE_1___default());\nwindow.axios = (axios__WEBPACK_IMPORTED_MODULE_0___default());\nwindow.Vue.mixin({\n  updated: function updated() {\n    var event = new Event('updated', {\n      bubbles: true\n    });\n    var elem = this.$el;\n    elem.dispatchEvent(event);\n  }\n});\n\n//# sourceURL=webpack://tiirs-new-version/./src/main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ \"./node_modules/axios/index.js\");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _helpers_axios_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers/axios.helpers */ \"./src/helpers/axios.helpers.js\");\n\n\n\nwindow.Vue = (vue__WEBPACK_IMPORTED_MODULE_2___default());\n(axios__WEBPACK_IMPORTED_MODULE_0___default().helpers) = _helpers_axios_helpers__WEBPACK_IMPORTED_MODULE_1__[\"default\"];\nwindow.axios = (axios__WEBPACK_IMPORTED_MODULE_0___default());\nwindow.Vue.mixin({\n  updated: function updated() {\n    var event = new Event('updated', {\n      bubbles: true\n    });\n    var elem = this.$el;\n    elem.dispatchEvent(event);\n  }\n});\n\n//# sourceURL=webpack://tiirs-new-version/./src/main.js?");
 
 /***/ })
 
