@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         "css/bootstrap.min.css",
         "css/jquery-ui.min.css",
         "css/metisMenu.min.css",
+        "plugins/RWD-Table-Patterns/dist/css/rwd-table.min.css",
         "css/icons.min.css",
         "css/app.min.css",
     ];
@@ -35,7 +36,9 @@ class AppAsset extends AssetBundle
         "js/waves.js",
         "js/feather.min.js",
         "js/jquery.slimscroll.min.js",
-        "pages/jquery.responsive-table.init.js"
+        "plugins/RWD-Table-Patterns/dist/js/rwd-table.min.js",
+        "pages/jquery.responsive-table.init.js",
+        "js/app.js",
     ];
 
     public $depends = [
