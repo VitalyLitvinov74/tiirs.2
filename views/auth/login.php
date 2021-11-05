@@ -2,11 +2,17 @@
 /**
  * @var View $this
  */
+
+use yii\helpers\Url;
+
 ?>
 <h4 class="m-0">С возвращением!</h4>
 <p class="mb-5">Авторизуйтесь в вашем аккаунте </p>
 
-<form novalidate @submit.prevent="sendForm">
+<form novalidate
+      @submit.prevent="sendForm"
+      :class="{loading : requestProcessed}"
+>
     <div class="form-group">
         <label class="text-label" for="email_2">Логин:</label>
         <div class="input-group input-group-merge">
@@ -54,6 +60,7 @@
     </div>
 </form>
 <?php
+$urlToTasks = Url::toRoute(['tasks/list']);
 $this->registerJs(<<<JS
     var store = {
                     login: null,
@@ -75,12 +82,13 @@ $this->registerJs(<<<JS
                 remote: {
                     invalid: false,
                     feedback: null
-                }
+                },
+                requestProcessed: false
             }
         },
         methods: {
             sendForm: function(){
-                this.cleanErrors();
+                this.preRequest();
                 var self = this;
                 axios({
                     method: "post",
@@ -88,10 +96,19 @@ $this->registerJs(<<<JS
                     data: this.store,
                     headers: { "Content-Type": "application/json" },
                 })
-                .then(function (response){
-                    
+                .then(function (body){
+                    self.requestProcessed = false;
+                    let data = body.data.data[0];
+                    if(data.attributes.hasOwnProperty('access_token')){
+                        localStorage.access_token = data.attributes.access_token;
+                        window.location.href = "$urlToTasks";
+                    }else{
+                        //зарегистрировались но сервер не вернул ключ доступа.
+                        $('#modal-danger').modal('show')
+                    }
                 })
                 .catch(function (body){
+                    self.requestProcessed = false;
                     let errors = body.response.data.errors[0];
                     for(let errorTitle in errors){
                         if(errors.hasOwnProperty(errorTitle)){
@@ -127,7 +144,8 @@ $this->registerJs(<<<JS
                 this.remote.feedback = description;
             },
             
-            cleanErrors: function() {
+            preRequest: function() {
+                this.requestProcessed = true;
                 this.password.invalid = false;
                 this.login.invalid = false;
             }
