@@ -1,5 +1,7 @@
 <?php
+
 use app\assets\AuthAsset;
+
 AuthAsset::register($this);
 ?>
 
@@ -28,7 +30,12 @@ AuthAsset::register($this);
     </div>
     <?= $content ?>
 </div>
-<?php $this->endBody() ?>
+
+<?php
+//    echo $this->render('modals/alert-modal-success.php');
+    echo $this->render('modals/alert-modal-danger.php');
+    $this->endBody()
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

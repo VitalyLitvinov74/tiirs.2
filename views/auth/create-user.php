@@ -88,9 +88,9 @@ use yii\web\View;
     </div>
 </form>
 <?php
-echo $this->render('modals/alert-modal-success.php');
-echo $this->render('modals/alert-modal-danger.php');
+
 $url = Url::toRoute(['user/user/create']);
+$urlToTasks = Url::toRoute(['tasks/list']);
 $this->registerJs(<<<JS
     var field = function(){
         return {
@@ -131,14 +131,13 @@ $this->registerJs(<<<JS
                 })
                 .then(body => {
                     self.requestProcessed = false;
-                    console.log(body);
                     let data = body.data.data[0];
-                    if(data.attributes.hasOwnProperty('accessToken')){
-                        $('#modal-success').modal('show');
+                    if(data.attributes.hasOwnProperty('access_token')){
+                        localStorage.access_token = data.attributes.access_token;
+                        window.location.href = "$urlToTasks";
                     }else{
-                        $('#modal-danger').modal('show');
                         //зарегистрировались но сервер не вернул ключ доступа.
-                        //error alert
+                        $('#modal-danger').modal('show')
                     }
                 })
                 .catch(error => {
@@ -179,7 +178,6 @@ $this->registerJs(<<<JS
             cleanErrors: function(){
                 let data = this.\$data;
                 for (let field in data){
-                    console.log(data[field]);
                     if(data[field].hasOwnProperty('invalid') && data[field].hasOwnProperty('feedback')){
                         data[field].invalid = false;
                         data[field].feedback = null;

@@ -19,6 +19,7 @@ class AuthAsset extends AssetBundle
         "css/vendor-material-icons.rtl.css",
         "css/vendor-fontawesome-free.css",
         "css/vendor-fontawesome-free.rtl.css",
+
     ];
 
     public $js = [
@@ -27,6 +28,7 @@ class AuthAsset extends AssetBundle
         "vendor/dom-factory.js",
         "vendor/material-design-kit.js",
         "js/toggle-check-all.js",
+        "vendor/bootstrap.min.js",
 //        "js/check-selected-row.js",
 //        "js/dropdown.js",
 //        "js/sidebar-mini.js",
@@ -36,7 +38,7 @@ class AuthAsset extends AssetBundle
 
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap4\BootstrapAsset',
+//        'yii\bootstrap4\BootstrapAsset',
         'app\assets\VueAsset'
     ];
 }
