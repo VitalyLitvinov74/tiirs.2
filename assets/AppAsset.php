@@ -20,11 +20,22 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
 
     public $css = [
-
+        "css/bootstrap.min.css",
+        "css/jquery-ui.min.css",
+        "css/metisMenu.min.css",
+        "css/icons.min.css",
+        "css/app.min.css",
     ];
 
     public $js = [
-
+        "js/jquery.min.js",
+        "js/jquery-ui.min.js",
+        "js/bootstrap.bundle.min.js",
+        "js/metismenu.min.js",
+        "js/waves.js",
+        "js/feather.min.js",
+        "js/jquery.slimscroll.min.js",
+        "pages/jquery.responsive-table.init.js"
     ];
 
     public $depends = [
