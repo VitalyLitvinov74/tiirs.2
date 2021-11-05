@@ -61,6 +61,7 @@ use yii\helpers\Url;
 </form>
 <?php
 $urlToTasks = Url::toRoute(['tasks/list']);
+$requestUrl = Url::toRoute(['user/user/login']);
 $this->registerJs(<<<JS
     var store = {
                     login: null,
@@ -92,7 +93,7 @@ $this->registerJs(<<<JS
                 var self = this;
                 axios({
                     method: "post",
-                    url: '/user/user/login',
+                    url: "$requestUrl",
                     data: this.store,
                     headers: { "Content-Type": "application/json" },
                 })
@@ -148,7 +149,7 @@ $this->registerJs(<<<JS
                 this.requestProcessed = true;
                 this.password.invalid = false;
                 this.login.invalid = false;
-            }
+            },
         }
     });
 JS
