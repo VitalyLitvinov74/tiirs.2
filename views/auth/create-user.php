@@ -10,7 +10,12 @@ use yii\web\View;
 <h4 class="m-0">Зарегистрируйтесь!</h4>
 <p class="mb-5">Создайте свой аккаунт в системе ТОиРУС</p>
 
-<form @submit.prevent="sendForm" novalidate id="create-user">
+<form
+        @submit.prevent="sendForm"
+        novalidate
+        id="create-user"
+        :class="{loading : requestProcessed}"
+>
     <div class="form-group">
         <label class="text-label" for="name_2">Как к вам обращаться:</label>
         <div class="input-group input-group-merge">
@@ -100,7 +105,8 @@ $this->registerJs(<<<JS
             return {
                 login: {},
                 password: {},
-                name: {}
+                name: {},
+                requestProcessed: false,
             }
         },
         mounted(){
@@ -110,6 +116,7 @@ $this->registerJs(<<<JS
         },
         methods: {
             sendForm: function(){
+                this.requestProcessed = true;
                 var self = this;
                 this.cleanErrors();
                 axios({
@@ -123,6 +130,7 @@ $this->registerJs(<<<JS
                     headers: {"Content-Type":"application/json"}
                 })
                 .then(body => {
+                    self.requestProcessed = false;
                     console.log(body);
                     let data = body.data.data[0];
                     if(data.attributes.hasOwnProperty('accessToken')){
@@ -134,6 +142,7 @@ $this->registerJs(<<<JS
                     }
                 })
                 .catch(error => {
+                    self.requestProcessed = false;
                     let errors = error.response.data.errors[0];
                     for (let errorTitle in errors){
                         if(errors.hasOwnProperty(errorTitle)){

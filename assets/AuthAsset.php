@@ -27,10 +27,10 @@ class AuthAsset extends AssetBundle
         "vendor/dom-factory.js",
         "vendor/material-design-kit.js",
         "js/toggle-check-all.js",
-        "js/check-selected-row.js",
-        "js/dropdown.js",
-        "js/sidebar-mini.js",
-        "js/app.js",
+//        "js/check-selected-row.js",
+//        "js/dropdown.js",
+//        "js/sidebar-mini.js",
+//        "js/app.js",
 //        "js/app-settings.js",
     ];
 

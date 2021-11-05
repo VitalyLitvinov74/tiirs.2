@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from "axios";
 import axiosHelpers from './helpers/axios.helpers';
+import './css/cloak.css';
 
 window.Vue = Vue;
 axios.helpers = axiosHelpers;
