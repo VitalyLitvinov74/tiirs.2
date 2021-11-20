@@ -37,8 +37,8 @@ Bootstable
 '<i class="dripicons-cross" aria-hidden="true"></i>'+
 '</button>'+
     '</div>';
-  var colEdicHtml = '<td name="buttons">'+newColHtml+'</td>'; 
-var colSaveHtml = '<td name="buttons">'+saveColHtml+'</td>';
+  // var colEdicHtml = '<td name="buttons">'+newColHtml+'</td>';
+// var colSaveHtml = '<td name="buttons">'+saveColHtml+'</td>';
     
   $.fn.SetEditable = function (options) {
     var defaults = {
@@ -50,21 +50,21 @@ var colSaveHtml = '<td name="buttons">'+saveColHtml+'</td>';
         onAdd: function() {}     //Called when added a new row
     };
     params = $.extend(defaults, options);
-    this.find('thead tr').append('<th name="buttons"></th>');  //encabezado vacío
-    this.find('tbody tr').append(colEdicHtml);
+    // this.find('thead tr').append('<th name="buttons"></th>');  //encabezado vacío
+    // this.find('tbody tr').append(colEdicHtml);
 	var $tabedi = this;   //Read reference to the current table, to resolve "this" here.
     //Process "addButton" parameter
-    if (params.$addButton != null) {
-        //Se proporcionó parámetro
-        params.$addButton.click(function() {
-            rowAddNew($tabedi.attr("id"));
-        });
-    }
-    //Process "columnsEd" parameter
-    if (params.columnsEd != null) {
-        //Extract felds
-        colsEdi = params.columnsEd.split(',');
-    }
+    // if (params.$addButton != null) {
+    //     //Se proporcionó parámetro
+    //     params.$addButton.click(function() {
+    //         rowAddNew($tabedi.attr("id"));
+    //     });
+    // }
+    // //Process "columnsEd" parameter
+    // if (params.columnsEd != null) {
+    //     //Extract felds
+    //     colsEdi = params.columnsEd.split(',');
+    // }
   };
 function IterarCamposEdit($cols, tarea) {
 //Itera por los campos editables de una fila

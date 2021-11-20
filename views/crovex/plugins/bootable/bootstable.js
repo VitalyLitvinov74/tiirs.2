@@ -128,6 +128,7 @@ function rowAcep(but) {
     FijModoNormal(but);
     params.onEdit($row);
 }
+
 function rowCancel(but) {
 //Rechaza los cambios de la edición
     var $row = $(but).parents('tr');  //accede a la fila
