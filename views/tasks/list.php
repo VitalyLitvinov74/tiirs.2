@@ -136,7 +136,9 @@ $this->registerJs(<<<JS
              * обрабатывает кнопку "добавить задачу".
              */
             addTask: function(){
-                let item = {};
+                let item = {
+                    editing: false
+                };
                 this.table.items.push(item);
                 this.changeTask(item);
             },
@@ -148,6 +150,7 @@ $this->registerJs(<<<JS
             },
             
             cancelChangeTask: function(item){
+                console.log(item);
                 item.editing = false;
             },
             
