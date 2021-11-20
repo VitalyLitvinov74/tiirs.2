@@ -28,118 +28,58 @@ use yii\web\View;
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-
-                <!--                <h4 class="mt-0 header-title">План работ на неделю с 08.11.2021 - 12.11.2021</h4>-->
-                <!--                <p class="text-muted mb-3">План работ с 08.11.2021 - 12.11.2021</p>-->
-
+                <b-table hover
+                         :items="table.items"
+                         :fields="table.fields"
+                         :small="true"
+                         fixed
+                >
+                    <template
+                            #cell()="data"
+                    >
+                      <span v-if="!data.item.editing">
+                          {{ data.value }}
+<!--                          {{ data.field.key}}-->
+<!--                          {{data.item}}-->
+                      </span>
+                        <b-input v-else v-model="table.items[data.index][data.field.key]" @keydown.enter.exact="saveTask(data.item)"></b-input>
+                    </template>
+                    <template
+                        #cell(actions)="data"
+                    >
+                        <button
+                                v-if="!data.item.editing"
+                                @click="changeTask(data.item)"
+                                type="button" class="btn btn-sm btn-soft-success btn-circle mr-2">
+                            <i class="dripicons-pencil"></i>
+                        </button>
+                        <button v-if="!data.item.editing"
+                                @click="deleteTask(data.index)"
+                                type="button" class="btn btn-sm btn-soft-danger btn-circle">
+                            <i class="dripicons-trash" aria-hidden="true"></i>
+                        </button>
+                        <button v-if="data.item.editing"
+                                @click="saveTask(data.item)"
+                                type="button"
+                                class="btn btn-sm btn-soft-purple mr-2 btn-circle"
+                                style="">
+                            <i class="dripicons-checkmark"></i>
+                        </button>
+                        <button
+                                v-if="data.item.editing"
+                                @click="cancelChangeTask(data.item)"
+                                type="button" class="btn btn-sm btn-soft-info btn-circle" style="" >
+                            <i class="dripicons-cross" aria-hidden="true"></i>
+                        </button>
+                    </template>
+                </b-table>
                 <div class="table-rep-plugin">
-                    <div class="table-responsive" data-pattern="priority-columns">
-                        <table id="makeEditable" class="table table-striped mb-0">
-                            <thead>
-                            <tr>
-                                <th data-priority="2">Задача</th>
-                                <th data-priority="6">Лицо-участник для решения задачи</th>
-                                <!--                                <th data-priority="3">Автор</th>-->
-                                <th data-priority="6">Дата постановки задачи</th>
-                                <th data-priority="6">Задача выполнена к</th>
-                                <th data-priority="6">Затраченное время</th>
-                                <th data-priority="3">Результат</th>
-                                <th data-priority="3">Отчет</th>
-                            </tr>
-                            </thead>
-                            <tbody class="table-striped">
-                            <tr>
-                                <td style="width:200px">GOOG Google Inc.</td>
-                                <td>597.74</td>
-                                <td>12:12PM</td>
-                                <td>14.81 (2.54%)</td>
-                                <td>582.93</td>
-                                <td>597.73 x 100</td>
-                                <td>597.91 x 300</td>
-                                <td name="buttons">
-                                    <div class=" pull-right">
-                                        <button
-                                                id="bEdit"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-success btn-circle mr-2"
-                                                style="" onclick="rowEdit(this);"><i class="dripicons-pencil">
-
-                                            </i>
-                                        </button>
-                                        <button
-                                                id="bElim"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-danger btn-circle"
-                                                style="" onclick="rowElim(this);">
-                                            <i class="dripicons-trash" aria-hidden="true"></i>
-                                        </button>
-                                        <button id="bAcep"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-purple mr-2 btn-circle"
-                                                @click="saveTask()"
-                                                onclick="rowAcep(this)" style="display: none;">
-                                            <i class="dripicons-checkmark"></i>
-                                        </button>
-                                        <button
-                                                id="bCanc"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-info btn-circle"
-                                                onclick="rowCancel(this);" style="display: none;">
-                                            <i class="dripicons-cross" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>GOOG</td>
-                                <td>597.74</td>
-                                <td>12:12PM</td>
-                                <td>14.81 (2.54%)</td>
-                                <td>582.93</td>
-                                <td>597.73 x 100</td>
-                                <td>597.91 x 300</td>
-                                <td name="buttons">
-                                    <div class=" pull-right">
-                                        <button
-                                                id="bEdit"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-success btn-circle mr-2"
-                                                style="" onclick="rowEdit(this);"><i class="dripicons-pencil">
-
-                                            </i>
-                                        </button>
-                                        <button
-                                                id="bElim"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-danger btn-circle"
-                                                style="" onclick="rowElim(this);">
-                                            <i class="dripicons-trash" aria-hidden="true"></i>
-                                        </button>
-                                        <button id="bAcep"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-purple mr-2 btn-circle"
-                                                @click="saveTask()"
-                                                onclick="rowAcep(this)" style="display: none;">
-                                            <i class="dripicons-checkmark"></i>
-                                        </button>
-                                        <button
-                                                id="bCanc"
-                                                type="button"
-                                                class="btn btn-sm btn-soft-info btn-circle"
-                                                onclick="rowCancel(this);" style="display: none;">
-                                            <i class="dripicons-cross" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
                     <span class="float-right">
                         <button
                                 id="but_add"
                                 @click="addTask"
                                 class="btn btn-gradient-danger waves-effect waves-light"
+                                style="color: white"
                         >Добавить задачу</button>
                     </span>
                 </div>
@@ -153,23 +93,76 @@ use yii\web\View;
 $this->registerJs(<<<JS
    new Vue({
         el: "#tasks",
-        data: {},
+        data: function(){
+            return {
+                table: {
+                    fields:[
+                        /**
+                        * editable: true | false - получаем от бека. 
+                        * */
+                        {key: "task", label: "Задача", editable: true},
+                        {key: "worker", label: "Лицо-участник для решения задачи", editable: true},
+                        {key: "taskDate", label: "Дата постановки задачи", editable: true},
+                        {key: "dateExpired", label: "Задача выполнена к", editable: true},
+                        {key: "result", label: "Результат", editable: true},
+                        {key: "time", label: "Затраченное время", editable: true},
+                        {key: "report", label: "Отчет", editable: true},
+                        {key: "actions", label: "Действие"},
+                        
+                    ],
+                    items: [
+                      { task: 40, worker: 'Dickerson', last_name: 'Macdonald' },
+                      { task: 21, worker: 'Larsen', last_name: 'Shaw' },
+                      { task: 89, worker: 'Geneva', last_name: 'Wilson' },
+                      { task: 38, worker: 'Jami', last_name: 'Carney' }
+                    ] 
+                }
+                
+            }
+        },
+        mounted: function(){
+            this.table.items = this.table.items.map(item => ({...item, editing: false}));
+        },
         methods:{
 
             /**
              * Сохарняет измененную задачу.
              * */
-            saveTask: function(){
-                console.log('hello')
+            saveTask: function(item){
+                item.editing = false;
             },
 
             /**
              * обрабатывает кнопку "добавить задачу".
              */
             addTask: function(){
+                let item = {};
+                this.table.items.push(item);
+                this.changeTask(item);
+            },
+            
+            changeTask: function(item){
+                 this.cancelAllChangeTask();
+                item.editing = true;
                 
+            },
+            
+            cancelChangeTask: function(item){
+                item.editing = false;
+            },
+            
+            cancelAllChangeTask: function(){
+                this.table.items.map(function (otherItem){
+                    otherItem.editing = false;
+                });
+                
+            },
+            
+            deleteTask: function(index){
+                this.table.items.splice(index, 1);
             }
         }
+        
     });
 JS
 ); ?>
