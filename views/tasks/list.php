@@ -102,7 +102,8 @@ $this->registerJs(<<<JS
                         * */
                         {key: "task", label: "Задача", editable: true},
                         {key: "worker", label: "Лицо-участник для решения задачи", editable: true},
-                        {key: "taskDate", label: "Дата постановки задачи", editable: true},
+                        //thClass: 'd-none', tdClass: 'd-none' скрывает колонку.
+                        {key: "taskDate", label: "Дата постановки задачи", editable: true, },
                         {key: "dateExpired", label: "Задача выполнена к", editable: true},
                         {key: "result", label: "Результат", editable: true},
                         {key: "time", label: "Затраченное время", editable: true},
