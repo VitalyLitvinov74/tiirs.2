@@ -1,12 +1,12 @@
 <?php
 
-use app\assets\TableAssets;
+use yii\helpers\Url;
 use yii\web\View;
 
 /**
  * @var View $this
  */
-//TableAssets::register($this);
+
 ?>
 <!-- Page-Title -->
 <div class="row">
@@ -27,25 +27,28 @@ use yii\web\View;
 <div class="row" id="tasks">
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body"
+                 :class="{ 'loading' : table.loading }"
+                 v-cloak
+            >
                 <b-table hover
                          :items="table.items"
                          :fields="table.fields"
-                         :small="true"
                          fixed
                 >
                     <template
                             #cell()="data"
                     >
-                      <span v-if="!data.item.editing">
+                      <span v-if="!data.item.editing || !data.field.editable">
                           {{ data.value }}
-<!--                          {{ data.field.key}}-->
-<!--                          {{data.item}}-->
+<!--                                                    {{ data.field}}-->
+                          <!--                          {{data.item}}-->
                       </span>
-                        <b-input v-else v-model="table.items[data.index][data.field.key]" @keydown.enter.exact="saveTask(data.item)"></b-input>
+                        <b-input v-else-if="data.field.editable === true" v-model="table.items[data.index][data.field.key]"
+                                 @keydown.enter.exact="saveTask(data.item)"></b-input>
                     </template>
                     <template
-                        #cell(actions)="data"
+                            #cell(actions)="data"
                     >
                         <button
                                 v-if="!data.item.editing"
@@ -54,7 +57,7 @@ use yii\web\View;
                             <i class="dripicons-pencil"></i>
                         </button>
                         <button v-if="!data.item.editing"
-                                @click="deleteTask(data.index)"
+                                @click="deleteTask(data.item, data.index)"
                                 type="button" class="btn btn-sm btn-soft-danger btn-circle">
                             <i class="dripicons-trash" aria-hidden="true"></i>
                         </button>
@@ -68,7 +71,7 @@ use yii\web\View;
                         <button
                                 v-if="data.item.editing"
                                 @click="cancelChangeTask(data.item)"
-                                type="button" class="btn btn-sm btn-soft-info btn-circle" style="" >
+                                type="button" class="btn btn-sm btn-soft-info btn-circle" style="">
                             <i class="dripicons-cross" aria-hidden="true"></i>
                         </button>
                     </template>
@@ -90,47 +93,119 @@ use yii\web\View;
 </div> <!-- end row -->
 
 <?php
+$saveUrl = \yii\helpers\Url::toRoute(['problems/problems/add-problem']);
+$tasksUrl = \yii\helpers\Url::toRoute(['problems/problems/problems']);
+$deleteUrl = Url::toRoute(['problems/problems/delete-problem']);
 $this->registerJs(<<<JS
    new Vue({
         el: "#tasks",
         data: function(){
             return {
                 table: {
-                    fields:[
-                        /**
-                        * editable: true | false - получаем от бека. 
-                        * */
-                        {key: "task", label: "Задача", editable: true},
-                        {key: "worker", label: "Лицо-участник для решения задачи", editable: true},
-                        //thClass: 'd-none', tdClass: 'd-none' скрывает колонку.
-                        {key: "taskDate", label: "Дата постановки задачи", editable: true, },
-                        {key: "dateExpired", label: "Задача выполнена к", editable: true},
-                        {key: "result", label: "Результат", editable: true},
-                        {key: "time", label: "Затраченное время", editable: true},
-                        {key: "report", label: "Отчет", editable: true},
-                        {key: "actions", label: "Действие"},
-                        
-                    ],
-                    items: [
-                      { task: 40, worker: 'Dickerson', last_name: 'Macdonald' },
-                      { task: 21, worker: 'Larsen', last_name: 'Shaw' },
-                      { task: 89, worker: 'Geneva', last_name: 'Wilson' },
-                      { task: 38, worker: 'Jami', last_name: 'Carney' }
-                    ] 
-                }
+                    fields: null, //см. метод fields
+                    items: null, // см. метод items
+                    loading: true
+                },
+                
                 
             }
         },
         mounted: function(){
-            this.table.items = this.table.items.map(item => ({...item, editing: false}));
+            this.loadTable();
         },
         methods:{
+            
+            loadTable: function(){
+                let self = this;
+                axios({
+                    method: "get",
+                    url: "$tasksUrl",
+                    headers: {"Content-Type":"application/json"}
+                })
+                .then(function(response){
+                    let data = response.data.data;
+                    if(data.length === 0){
+                        return;    
+                    }
+                    self.table.fields = self.fields(data[0].attributes.mappedKeys);
+                    self.table.items = self.items(data);
+                    self.table.loading = false;
+                })
+                .catch(function(error){
+                    console.log(error.data);
+                    self.table.loading = false;
+                });
+            },
+            
+            /**
+            * Создает структуру таблицы на основе ответа от бэкэнда.
+            * @param axiosMappedKeys
+            */
+            fields: function(axiosMappedKeys){
+                return [
+                    {key: "id", label: axiosMappedKeys.id},
+                    {key: "description", label: axiosMappedKeys.description, editable: true},
+                    {key: "status", label: axiosMappedKeys.status, editable: true},
+                    {key: "time_of_creation", label: axiosMappedKeys.time_of_creation},
+                    {key: "period_of_execution", label: axiosMappedKeys.period_of_execution, editable: true},
+                    {key: "actions", label: "Действие"},
+                ]
+            },
+            
+            /**
+            * заполняет таблицу на основе ответа от бека
+            * @param axiosTasks
+            * @return {*}
+            */
+            items: function(axiosTasks){
+                let self = this;
+                return axiosTasks.map(function(task){
+                    let attr = task.attributes;
+                    return {
+                        id: task.id,
+                        description: attr.description,
+                        status: attr.status,
+                        time_of_creation: self.convertTime(attr.time_of_creation),
+                        period_of_execution: self.convertTime(attr.period_of_execution),
+                        editing: false
+                    };
+                });
+            },
+            
+            /**
+            * Преобразует дату из timestamp в дд.мм.гггг (чч:мм)
+            * */
+            convertTime: function(timestamp){
+                return moment(timestamp * 1000, 'x').format('DD.MM.YYYY (HH:mm)');
+            },
 
             /**
              * Сохарняет измененную задачу.
              * */
             saveTask: function(item){
                 item.editing = false;
+                let itemData = item;
+                itemData.author_id = 1;
+                let self = this;
+                axios({
+                    method: "POST",
+                    url: "$saveUrl",
+                    data: itemData,
+                    headers: {"Content-Type":"application/json"}
+                })
+                .then(function(response){
+                    let data = response.data.data;
+                    itemData.status = data.attributes.status;
+                    itemData.timeOfCreation = data.attributes.time_of_creation;
+                    itemData.periodOfExecution = data.attributes.period_of_execution;
+                })
+                .catch(function (error){
+                    console.log(error.data);
+                });
+            },
+            
+            saveNewTask: function(){
+                
             },
 
             /**
@@ -151,7 +226,6 @@ $this->registerJs(<<<JS
             },
             
             cancelChangeTask: function(item){
-                console.log(item);
                 item.editing = false;
             },
             
@@ -162,8 +236,25 @@ $this->registerJs(<<<JS
                 
             },
             
-            deleteTask: function(index){
-                this.table.items.splice(index, 1);
+            /**
+            * @param item - сам элемент откуда берем ид для удаления данных.
+            * @param index - номер элемента в массиве (в таблице на фронте)
+            * */
+            deleteTask: function(item, index){
+                axios({
+                    method: "POST",
+                    url: "$deleteUrl",
+                    data: {id: item.id},
+                    headers: {"Content-Type":"application/json"}
+                })
+                .then(function(response) {
+                    this.table.items.splice(index, 1);
+                })
+                .catch(function(error){
+                    //вывести предупреждение что не удалось удалить.
+                    error.data;
+                });
+                
             }
         }
         
