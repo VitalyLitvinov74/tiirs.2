@@ -38,14 +38,22 @@ use yii\web\View;
                 >
                     <template
                             #cell()="data"
+                            :class="{ 'loading' : data.item.loading }"
+                            v-cloak
                     >
                       <span v-if="!data.item.editing || !data.field.editable">
                           {{ data.value }}
 <!--                                                    {{ data.field}}-->
                           <!--                          {{data.item}}-->
                       </span>
-                        <b-input v-else-if="data.field.editable === true" v-model="table.items[data.index][data.field.key]"
-                                 @keydown.enter.exact="saveTask(data.item)"></b-input>
+                        <div v-else-if="data.field.editable === true">
+                            <b-input
+                                    v-model="table.items[data.index][data.field.key]"
+                                     @keydown.enter.exact="saveTask(data.item)"
+                                    :class="{ 'is-invalid' : data.item.errors[data.field.key]}"
+                            ></b-input>
+                            <div class="invalid-feedback">{{ data.item.errors[data.field.key] }}</div>
+                        </div>
                     </template>
                     <template
                             #cell(actions)="data"
@@ -80,7 +88,7 @@ use yii\web\View;
                     <span class="float-right">
                         <button
                                 id="but_add"
-                                @click="addTask"
+                                @click="addRow"
                                 class="btn btn-gradient-danger waves-effect waves-light"
                                 style="color: white"
                         >Добавить задачу</button>
@@ -93,7 +101,8 @@ use yii\web\View;
 </div> <!-- end row -->
 
 <?php
-$saveUrl = \yii\helpers\Url::toRoute(['problems/problems/add-problem']);
+$updateProblemUrl = \yii\helpers\Url::toRoute(['problems/problems/update-problem']);
+$addTaskUrl = \yii\helpers\Url::toRoute(['problems/problems/add-problem']);
 $tasksUrl = \yii\helpers\Url::toRoute(['problems/problems/problems']);
 $deleteUrl = Url::toRoute(['problems/problems/delete-problem']);
 $this->registerJs(<<<JS
@@ -167,7 +176,10 @@ $this->registerJs(<<<JS
                         status: attr.status,
                         time_of_creation: self.convertTime(attr.time_of_creation),
                         period_of_execution: self.convertTime(attr.period_of_execution),
-                        editing: false
+                        editing: false, // редактируется ли этот элемент в текущий момент
+                        new: false, //указывает новый ли это элемент
+                        loading: false,
+                        errors: {} //ошибки редактирования если они есть.
                     };
                 });
             },
@@ -183,13 +195,16 @@ $this->registerJs(<<<JS
              * Сохарняет измененную задачу.
              * */
             saveTask: function(item){
-                item.editing = false;
+                item.loading = true;
+                if(item.new){
+                    this.saveNewTask(item);
+                    return;
+                }
                 let itemData = item;
-                itemData.author_id = 1;
                 let self = this;
                 axios({
                     method: "POST",
-                    url: "$saveUrl",
+                    url: "$updateProblemUrl",
                     data: itemData,
                     headers: {"Content-Type":"application/json"}
                 })
@@ -198,29 +213,65 @@ $this->registerJs(<<<JS
                     itemData.status = data.attributes.status;
                     itemData.timeOfCreation = data.attributes.time_of_creation;
                     itemData.periodOfExecution = data.attributes.period_of_execution;
+                    item.editing = false;
                 })
                 .catch(function (error){
                     console.log(error.data);
                 });
             },
             
-            saveNewTask: function(){
+            saveNewTask: function(item){
+                item.new = false;
+                axios({
+                    method: "POST",
+                    url: "$addTaskUrl",
+                    data: item,
+                    headers: {"Content-Type":"application/json"}
+                })
+                .then(function(body){
+                    let data = body.data.data; 
+                    item.editing = false;
+                    item.loading = false;
+                })
+                .catch(function (body){
+                    let axiosError = body.response.data;
+                    if(axiosError.hasOwnProperty('errors')){ //сработало исключение, ошибка валидна
+                        let errors = axiosError.errors;
+                        if(errors.find(error => error.title === "author_id")){
+                               console.log('Ошибка авторизации')//Ошибка авторизации
+                        }
+                        for (let error in errors){
+                            item.errors[errors[error].title] = errors[error].description
+                        }
+                        
+                        //вывести ошибку на поля формы.
+                    }else{ //произошла неизвестная ошибка
+                       
+                    }
+                    item.loading = false;
+                });
+            },
+            
+            setErrorsToRow: function(item){
                 
             },
 
             /**
              * обрабатывает кнопку "добавить задачу".
              */
-            addTask: function(){
+            addRow: function(){
                 let item = {
-                    editing: false
+                    editing: false,
+                    new: true,
+                    loading: false,
+                    errors: {}
                 };
                 this.table.items.push(item);
                 this.changeTask(item);
             },
             
             changeTask: function(item){
-                 this.cancelAllChangeTask();
+                this.cancelAllChangeTask();
                 item.editing = true;
                 
             },
