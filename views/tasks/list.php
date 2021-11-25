@@ -38,8 +38,12 @@ use yii\web\View;
                     </th>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, index) in table.items">
-                        <td v-for="(cell, fieldKey) in item">
+                    <tr
+                        v-for="(item, index) in table.items"
+                    >
+                        <td
+                                v-for="(cell, fieldKey) in item"
+                        >
                             <p
                                     v-if="!itemEditing(index)"
                             >
@@ -49,13 +53,21 @@ use yii\web\View;
                                     v-else-if="itemEditing(index) && itemEditable(fieldKey)"
                                     class="form-control form-control-prepended"
                                     v-model="table.items[index][fieldKey]"
+                                    :class="{'is-invalid': itemInvalid(fieldKey, index)}"
                             >
                             <input
                                     v-else
                                     class="form-control form-control-prepended"
+                                    :class="{'is-invalid': itemInvalid(fieldKey, index)}"
                                     v-model="table.items[index][fieldKey]"
                                     disabled
                             >
+
+                            <div
+                                    v-if="itemEditing(index)"
+                                    :class="{ 'invalid-feedback' : itemInvalid(fieldKey, index) }"
+                                    style="height:18px"
+                            >{{ itemError(fieldKey, index) }}</div>
                         </td>
                         <td>
                             <button
@@ -70,7 +82,7 @@ use yii\web\View;
                                 <i class="dripicons-trash" aria-hidden="true"></i>
                             </button>
                             <button v-if="itemEditing(index)"
-                                    @click="saveTask(item)"
+                                    @click="saveTask(item, index)"
                                     type="button"
                                     class="btn btn-sm btn-soft-purple mr-2 btn-circle"
                                     style="">
@@ -82,6 +94,11 @@ use yii\web\View;
                                     type="button" class="btn btn-sm btn-soft-info btn-circle" style="">
                                 <i class="dripicons-cross" aria-hidden="true"></i>
                             </button>
+                            <div
+                                    v-if="itemEditing(index)"
+                                    style="height:18px">
+
+                            </div>
                         </td>
                     </tr>
                     </tbody>

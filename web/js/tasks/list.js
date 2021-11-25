@@ -1,3 +1,4 @@
+//todo нужно добавить динамичности. (лоадеры)
 new Vue({
     el: "#tasks",
     data: function(){
@@ -97,11 +98,25 @@ new Vue({
             });
         },
 
+        itemError: function(errorKey, index){
+            return this.table.itemsControls[index].errors[errorKey];
+        },
+
+        itemInvalid: function(fieldKey, index){
+            let errors = this.table.itemsControls[index].errors;
+            return errors.hasOwnProperty(fieldKey);
+        },
+
+        itemLoading: function(index){
+            return this.table.itemsControls[index].loading;
+        },
+
         defaultItemControl: function(){
             return {
                 editing: false, // редактируется ли строка  в текущий момент
                 new: false, //указывает новая ли это строка
                 loading: false,
+                invalid: false,
                 errors: {} //ошибки редактирования если они есть.
             };
         },
@@ -114,16 +129,27 @@ new Vue({
         },
 
         /**
-         * Сохарняет измененную задачу.
+         * Конвертит время обратно в timestamp
          * */
-        saveTask: function(item){
-            item.loading = true;
-            if(item.new){
-                this.saveNewTask(item);
+        revertTime: function(timeString){
+            return moment(timeString, 'DD.MM.YYYY (HH:mm)x').format('x') / 1000;
+        },
+
+        /**
+         * Сохарняет измененную задачу.
+         * todo: При отправке формы видно что время меняется на timestamp;
+         * */
+        saveTask: function(item, index){
+            let itemControl = this.table.itemsControls[index];
+            itemControl.loading = true;
+            if(itemControl.new){
+                this.saveNewTask(item, index);
                 return;
             }
-            let itemData = item;
             let self = this;
+            let itemData = item;
+            itemData.period_of_execution = this.revertTime(itemData.period_of_execution);
+            itemData.time_of_creation = this.revertTime(itemData.time_of_creation);
             axios({
                 method: "POST",
                 url: "/problems/problems/update-problem",
@@ -132,45 +158,83 @@ new Vue({
             })
                 .then(function(response){
                     let data = response.data.data;
-                    itemData.status = data.attributes.status;
-                    itemData.timeOfCreation = data.attributes.time_of_creation;
-                    itemData.periodOfExecution = data.attributes.period_of_execution;
-                    item.editing = false;
+                    item.status = data.attributes.status;
+                    item.time_of_creation = self.convertTime(data.attributes.time_of_creation);
+                    item.period_of_execution = self.convertTime(data.attributes.period_of_execution);
+                    itemControl.editing = false;
+
+                    self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
+                    self.$set(self.table.items, index, item); //добавляем реактивности.
                 })
                 .catch(function (error){
-                    console.log(error.data);
+                    if(error.status === 500){
+                        //произошла неизвестная ошибка
+
+                        return ;
+                    }
+                    let axiosError = body.response.data;
+                    if(axiosError.hasOwnProperty('errors')){
+                        let errors = axiosError.errors;
+                        if(errors.find(error => error.title === "author_id")){
+                            console.log('Ошибка авторизации')
+                        }
+                        for (let error in errors){
+                            itemControl.errors[errors[error].title] = errors[error].description
+                        }
+                        // item.time_of_creation = self.convertTime(data.attributes.time_of_creation);
+                        // item.period_of_execution = self.convertTime(data.attributes.period_of_execution);
+
+                        self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
+                        self.$set(self.table.items, index, item); //добавляем реактивности.
+                    }
+
+                    //произошла неизвестная ошибка.
+
                 });
         },
 
-        saveNewTask: function(item){
-            item.new = false;
+        saveNewTask: function(item, index){
+            let itemControl = this.table.itemsControls[index];
+            let self = this;
+            let sendItem = Object.assign({}, item);
+            sendItem.author_id = 8;
+            //в item нужно изменить дату в timestamp
             axios({
                 method: "POST",
                 url: "/problems/problems/add-problem",
-                data: item,
+                data: sendItem,
                 headers: {"Content-Type":"application/json"}
             })
                 .then(function(body){
                     let data = body.data.data;
-                    item.editing = false;
-                    item.loading = false;
+                    itemControl.editing = false;
+                    itemControl.loading = false;
+                    itemControl.new = false;
+                    item.id = data.id;
+                    item.time_of_creation = self.convertTime(data.attributes.time_of_creation);
+                    item.period_of_execution = self.convertTime(data.attributes.period_of_execution);
+                    item.status = data.attributes.status;
+                    self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
+                    self.$set(self.table.items, index, item); //добавляем реактивности.
                 })
                 .catch(function (body){
                     let axiosError = body.response.data;
+                    itemControl.invalid = true;
                     if(axiosError.hasOwnProperty('errors')){ //сработало исключение, ошибка валидна
                         let errors = axiosError.errors;
                         if(errors.find(error => error.title === "author_id")){
-                            console.log('Ошибка авторизации')//Ошибка авторизации
+                            console.log('Ошибка авторизации')
                         }
                         for (let error in errors){
-                            item.errors[errors[error].title] = errors[error].description
+                            itemControl.errors[errors[error].title] = errors[error].description
                         }
-                        console.log(item);
-                        //вывести ошибку на поля формы.
-                    }else{ //произошла неизвестная ошибка
-
+                    }else{
+                        console.log("Произошла неизвестная ошибка")
                     }
-                    item.loading = false;
+                    itemControl.loading = false;
+                    itemControl.new = true;
+                    self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
+                    self.$set(self.table.items, index, item); //добавляем реактивности.
                 });
         },
 
@@ -188,6 +252,7 @@ new Vue({
                 }
             );
             let itemControl = this.defaultItemControl();
+            itemControl.new = true;
             this.table.itemsControls.push(itemControl);
             this.changeTask(itemControl);
         },
@@ -213,6 +278,13 @@ new Vue({
          * @param index - номер элемента в массиве (в таблице на фронте)
          * */
         deleteTask: function(item, index){
+            let itemControl = this.table.itemsControls[index];
+            if(itemControl.new){
+                this.table.itemsControls.splice(index, 1);
+                this.table.items.splice(index, 1);
+                return ;
+            }
+            let self = this;
             axios({
                 method: "POST",
                 url: "/problems/problems/delete-problem",
@@ -220,14 +292,16 @@ new Vue({
                 headers: {"Content-Type":"application/json"}
             })
                 .then(function(response) {
-                    this.table.items.splice(index, 1);
+                    self.table.itemsControls.splice(index, 1);
+                    self.table.items.splice(index, 1);
+
                 })
                 .catch(function(error){
                     //вывести предупреждение что не удалось удалить.
                     error.data;
                 });
 
-        }
+        },
     }
 
 });
