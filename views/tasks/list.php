@@ -33,13 +33,16 @@ use yii\web\View;
             >
                 <table class="table table-bordered table-striped hover">
                     <thead>
-                    <th v-for="field in table.fields">
+                    <th
+                            v-for="field in table.fields"
+                            :style="{width: field.width + '%'}"
+                    >
                         {{ field.label }}
                     </th>
                     </thead>
                     <tbody>
                     <tr
-                        v-for="(item, index) in table.items"
+                            v-for="(item, index) in table.items"
                     >
                         <td
                                 v-for="(cell, fieldKey) in item"
@@ -67,9 +70,11 @@ use yii\web\View;
                                     v-if="itemEditing(index)"
                                     :class="{ 'invalid-feedback' : itemInvalid(fieldKey, index) }"
                                     style="height:18px"
-                            >{{ itemError(fieldKey, index) }}</div>
+                            >{{ itemError(fieldKey, index) }}
+                            </div>
                         </td>
                         <td>
+<!--                            Стандартные кнопки-->
                             <button
                                     v-if="!itemEditing(index)"
                                     @click="changeTask(table.itemsControls[index])"
@@ -78,9 +83,14 @@ use yii\web\View;
                             </button>
                             <button v-if="!itemEditing(index)"
                                     @click="deleteTask(item, index)"
-                                    type="button" class="btn btn-sm btn-soft-danger btn-circle">
+                                    type="button" class="btn btn-sm btn-soft-danger btn-circle mr-2">
                                 <i class="dripicons-trash" aria-hidden="true"></i>
                             </button>
+                            <button v-if="!itemEditing(index)"
+                                    type="button" class="btn btn-sm btn-soft-info btn-circle">
+                                <i class="dripicons-exit" aria-hidden="true"></i>
+                            </button>
+<!--                            кнопки которые открываются при редактировании-->
                             <button v-if="itemEditing(index)"
                                     @click="saveTask(item, index)"
                                     type="button"
@@ -103,6 +113,7 @@ use yii\web\View;
                     </tr>
                     </tbody>
                 </table>
+
                 <div class="table-rep-plugin">
                     <span class="float-right">
                         <button
@@ -113,6 +124,15 @@ use yii\web\View;
                         >Добавить задачу</button>
                     </span>
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled"><a class="page-link" href="#" ><span aria-hidden="true">«</span> Туда</a></li>
+                        <li class="page-item active"><a class="page-link " href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Сюда <span aria-hidden="true">»</span></a></li>
+                    </ul><!--end pagination-->
+                </nav>
 
             </div>
         </div>

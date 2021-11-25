@@ -50,12 +50,12 @@ new Vue({
          */
         fields: function(axiosMappedKeys){
             return [
-                {key: "id", label: axiosMappedKeys.id},
-                {key: "description", label: axiosMappedKeys.description, editable: true},
-                {key: "status", label: axiosMappedKeys.status, editable: true},
-                {key: "time_of_creation", label: axiosMappedKeys.time_of_creation},
-                {key: "period_of_execution", label: axiosMappedKeys.period_of_execution, editable: true},
-                {key: "actions", label: "Действие"},
+                {key: "id", label: axiosMappedKeys.id, width: 5},
+                {key: "description", label: axiosMappedKeys.description, editable: true, width: 30},
+                {key: "status", label: axiosMappedKeys.status, editable: true, width: 10},
+                {key: "time_of_creation", label: axiosMappedKeys.time_of_creation, width: 10},
+                {key: "period_of_execution", label: axiosMappedKeys.period_of_execution, editable: true, width:10},
+                {key: "actions", label: "Действие", width: 8},
             ]
         },
 
