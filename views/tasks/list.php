@@ -14,12 +14,12 @@ use yii\web\View;
         <div class="page-title-box">
             <div class="float-right">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Crovex</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">UI Kit</a></li>
-                    <li class="breadcrumb-item active">Responsive</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Главная</a></li>
+<!--                    <li class="breadcrumb-item"><a href="javascript:void(0);">Задачи</a></li>-->
+                    <li class="breadcrumb-item active"><?=$this->title?></li>
                 </ol>
             </div>
-            <h4 class="page-title">Responsive Table</h4>
+            <h4 class="page-title"><?=$this->title?></h4>
         </div><!--end page-title-box-->
     </div><!--end col-->
 </div>
@@ -87,6 +87,7 @@ use yii\web\View;
                                 <i class="dripicons-trash" aria-hidden="true"></i>
                             </button>
                             <button v-if="!itemEditing(index)"
+                                    @click="redirectToViewPage(index)"
                                     type="button" class="btn btn-sm btn-soft-info btn-circle">
                                 <i class="dripicons-exit" aria-hidden="true"></i>
                             </button>

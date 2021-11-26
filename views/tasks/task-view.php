@@ -2,19 +2,20 @@
 /**
  * @var \yii\web\View $this
  */
-?>
+
+use yii\helpers\Url; ?>
 <!-- Page-Title -->
 <div class="row">
     <div class="col-sm-12">
         <div class="page-title-box">
             <div class="float-right">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Crovex</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">UI Kit</a></li>
-                    <li class="breadcrumb-item active">Responsive</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Главная</a></li>
+                    <li class="breadcrumb-item"><a href="<?=Url::toRoute(['tasks/list'])?>">Список задач</a></li>
+                    <li class="breadcrumb-item active">Задача 24</li>
                 </ol>
             </div>
-            <h4 class="page-title">Responsive Table</h4>
+            <h4 class="page-title">Просмотр задачи</h4>
         </div><!--end page-title-box-->
     </div><!--end col-->
 </div>

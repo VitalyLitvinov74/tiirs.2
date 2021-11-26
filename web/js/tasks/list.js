@@ -302,6 +302,11 @@ new Vue({
                 });
 
         },
+
+        redirectToViewPage: function (index){
+            let idItem = this.table.items[index].id;
+            window.location.href="/tasks/view/";
+        }
     }
 
 });
