@@ -1,7 +1,7 @@
 //todo нужно добавить динамичности. (лоадеры)
 new Vue({
     el: "#tasks",
-    data: function(){
+    data: function () {
         return {
             table: {
                 fields: null, //см. метод fields
@@ -12,24 +12,22 @@ new Vue({
             rowData: {}
         }
     },
-    mounted: function(){
+    mounted: function () {
         this.loadTable();
     },
-    computed: {
+    computed: {},
+    methods: {
 
-    },
-    methods:{
-
-        loadTable: function(){
+        loadTable: function () {
             let self = this;
             axios({
                 method: "get",
                 url: "/problems/problems/problems",
-                headers: {"Content-Type":"application/json"}
+                headers: {"Content-Type": "application/json"}
             })
-                .then(function(response){
+                .then(function (response) {
                     let data = response.data.data;
-                    if(data.length === 0){
+                    if (data.length === 0) {
                         return;
                     }
                     self.table.fields = self.fields(data[0].attributes.mappedKeys);
@@ -38,7 +36,7 @@ new Vue({
                     self.table.loading = false;
 
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     console.log(error.data);
                     self.table.loading = false;
                 });
@@ -48,14 +46,69 @@ new Vue({
          * Создает структуру таблицы на основе ответа от бэкэнда.
          * @param axiosMappedKeys
          */
-        fields: function(axiosMappedKeys){
+        fields: function (axiosMappedKeys) {
             return [
-                {key: "id", label: axiosMappedKeys.id, width: 5},
-                {key: "description", label: axiosMappedKeys.description, editable: true, width: 30},
-                {key: "status", label: axiosMappedKeys.status, editable: true, width: 10},
-                {key: "time_of_creation", label: axiosMappedKeys.time_of_creation, width: 10},
-                {key: "period_of_execution", label: axiosMappedKeys.period_of_execution, editable: true, width:10},
-                {key: "actions", label: "Действие", width: 8},
+                {
+                    key: "id",
+                    label: axiosMappedKeys.id,
+                    width: 5,
+                },
+                {
+                    key: "description",
+                    label: axiosMappedKeys.description,
+                    editable: true,
+                    width: 30,
+                    filter: {
+                        type: "text",
+                        options: {
+                            placeholder: "Поиск по описанию"
+                        },
+                        value: null
+                    }
+                },
+                {
+                    key: "status",
+                    label: axiosMappedKeys.status,
+                    editable: true,
+                    width: 10,
+                    filter: {
+                        type: "select",
+                        options: this.statuses(),
+                    }
+                },
+                {
+                    key: "time_of_creation",
+                    label: axiosMappedKeys.time_of_creation,
+                    width: 10,
+                    filter: {
+                        type: "select",
+                        options: [
+                            "Текущий день",
+                            "Текущую неделю",
+                            "Текущий месяц",
+                        ],
+                    }
+                }
+                ,
+                {
+                    key: "period_of_execution",
+                    label: axiosMappedKeys.period_of_execution,
+                    editable: true,
+                    width: 10,
+                    filter: {
+                        type: "select",
+                        options: [
+                            "Текущий день",
+                            "Текущую неделю",
+                            "Текущий месяц",
+                        ],
+                    }
+                },
+                {
+                    key: "actions",
+                    label: "Действие",
+                    width: 8
+                },
             ]
         },
 
@@ -64,9 +117,9 @@ new Vue({
          * @param axiosTasks
          * @return {*}
          */
-        items: function(axiosTasks){
+        items: function (axiosTasks) {
             let self = this;
-            return axiosTasks.map(function(task){
+            return axiosTasks.map(function (task) {
                 let attr = task.attributes;
                 return {
                     id: task.id,
@@ -81,37 +134,37 @@ new Vue({
         /**
          * Дополнительные данные по каждой строке.
          * */
-        itemsControls(axiosTasks){
+        itemsControls(axiosTasks) {
             let self = this;
-            return axiosTasks.map(function (task){
+            return axiosTasks.map(function (task) {
                 return self.defaultItemControl();
             });
         },
 
-        itemEditing: function (index){
+        itemEditing: function (index) {
             return this.table.itemsControls[index].editing;
         },
 
-        itemEditable: function(fieldKey){
-            return this.table.fields.find(function(field){
+        itemEditable: function (fieldKey) {
+            return this.table.fields.find(function (field) {
                 return field.key === fieldKey && field.editable === true;
             });
         },
 
-        itemError: function(errorKey, index){
+        itemError: function (errorKey, index) {
             return this.table.itemsControls[index].errors[errorKey];
         },
 
-        itemInvalid: function(fieldKey, index){
+        itemInvalid: function (fieldKey, index) {
             let errors = this.table.itemsControls[index].errors;
             return errors.hasOwnProperty(fieldKey);
         },
 
-        itemLoading: function(index){
+        itemLoading: function (index) {
             return this.table.itemsControls[index].loading;
         },
 
-        defaultItemControl: function(){
+        defaultItemControl: function () {
             return {
                 editing: false, // редактируется ли строка  в текущий момент
                 new: false, //указывает новая ли это строка
@@ -124,14 +177,14 @@ new Vue({
         /**
          * Преобразует дату из timestamp в дд.мм.гггг (чч:мм)
          * */
-        convertTime: function(timestamp){
+        convertTime: function (timestamp) {
             return moment(timestamp * 1000, 'x').format('DD.MM.YYYY (HH:mm)');
         },
 
         /**
          * Конвертит время обратно в timestamp
          * */
-        revertTime: function(timeString){
+        revertTime: function (timeString) {
             return moment(timeString, 'DD.MM.YYYY (HH:mm)x').format('x') / 1000;
         },
 
@@ -139,10 +192,10 @@ new Vue({
          * Сохарняет измененную задачу.
          * todo: При отправке формы видно что время меняется на timestamp;
          * */
-        saveTask: function(item, index){
+        saveTask: function (item, index) {
             let itemControl = this.table.itemsControls[index];
             itemControl.loading = true;
-            if(itemControl.new){
+            if (itemControl.new) {
                 this.saveNewTask(item, index);
                 return;
             }
@@ -154,9 +207,9 @@ new Vue({
                 method: "POST",
                 url: "/problems/problems/update-problem",
                 data: itemData,
-                headers: {"Content-Type":"application/json"}
+                headers: {"Content-Type": "application/json"}
             })
-                .then(function(response){
+                .then(function (response) {
                     let data = response.data.data;
                     item.status = data.attributes.status;
                     item.time_of_creation = self.convertTime(data.attributes.time_of_creation);
@@ -166,19 +219,19 @@ new Vue({
                     self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
                     self.$set(self.table.items, index, item); //добавляем реактивности.
                 })
-                .catch(function (error){
-                    if(error.status === 500){
+                .catch(function (error) {
+                    if (error.status === 500) {
                         //произошла неизвестная ошибка
 
-                        return ;
+                        return;
                     }
                     let axiosError = body.response.data;
-                    if(axiosError.hasOwnProperty('errors')){
+                    if (axiosError.hasOwnProperty('errors')) {
                         let errors = axiosError.errors;
-                        if(errors.find(error => error.title === "author_id")){
+                        if (errors.find(error => error.title === "author_id")) {
                             console.log('Ошибка авторизации')
                         }
-                        for (let error in errors){
+                        for (let error in errors) {
                             itemControl.errors[errors[error].title] = errors[error].description
                         }
                         // item.time_of_creation = self.convertTime(data.attributes.time_of_creation);
@@ -193,7 +246,7 @@ new Vue({
                 });
         },
 
-        saveNewTask: function(item, index){
+        saveNewTask: function (item, index) {
             let itemControl = this.table.itemsControls[index];
             let self = this;
             let sendItem = Object.assign({}, item);
@@ -203,9 +256,9 @@ new Vue({
                 method: "POST",
                 url: "/problems/problems/add-problem",
                 data: sendItem,
-                headers: {"Content-Type":"application/json"}
+                headers: {"Content-Type": "application/json"}
             })
-                .then(function(body){
+                .then(function (body) {
                     let data = body.data.data;
                     itemControl.editing = false;
                     itemControl.loading = false;
@@ -217,18 +270,18 @@ new Vue({
                     self.$set(self.table.itemsControls, index, itemControl); //добавляем реактивности.
                     self.$set(self.table.items, index, item); //добавляем реактивности.
                 })
-                .catch(function (body){
+                .catch(function (body) {
                     let axiosError = body.response.data;
                     itemControl.invalid = true;
-                    if(axiosError.hasOwnProperty('errors')){ //сработало исключение, ошибка валидна
+                    if (axiosError.hasOwnProperty('errors')) { //сработало исключение, ошибка валидна
                         let errors = axiosError.errors;
-                        if(errors.find(error => error.title === "author_id")){
+                        if (errors.find(error => error.title === "author_id")) {
                             console.log('Ошибка авторизации')
                         }
-                        for (let error in errors){
+                        for (let error in errors) {
                             itemControl.errors[errors[error].title] = errors[error].description
                         }
-                    }else{
+                    } else {
                         console.log("Произошла неизвестная ошибка")
                     }
                     itemControl.loading = false;
@@ -241,7 +294,7 @@ new Vue({
         /**
          * обрабатывает кнопку "добавить задачу".
          */
-        addRow: function(){
+        addRow: function () {
             this.table.items.push(
                 {
                     id: null,
@@ -257,17 +310,17 @@ new Vue({
             this.changeTask(itemControl);
         },
 
-        changeTask: function(itemControl){
+        changeTask: function (itemControl) {
             this.cancelAllChangeTask();
             itemControl.editing = true;
         },
 
-        cancelChangeTask: function(index){
+        cancelChangeTask: function (index) {
             this.table.itemsControls[index].editing = false;
         },
 
-        cancelAllChangeTask: function(){
-            this.table.itemsControls.map(function (itemControl){
+        cancelAllChangeTask: function () {
+            this.table.itemsControls.map(function (itemControl) {
                 itemControl.editing = false;
             });
 
@@ -277,35 +330,96 @@ new Vue({
          * @param item - сам элемент откуда берем ид для удаления данных.
          * @param index - номер элемента в массиве (в таблице на фронте)
          * */
-        deleteTask: function(item, index){
+        deleteTask: function (item, index) {
             let itemControl = this.table.itemsControls[index];
-            if(itemControl.new){
+            if (itemControl.new) {
                 this.table.itemsControls.splice(index, 1);
                 this.table.items.splice(index, 1);
-                return ;
+                return;
             }
             let self = this;
             axios({
                 method: "POST",
                 url: "/problems/problems/delete-problem",
                 data: {id: item.id},
-                headers: {"Content-Type":"application/json"}
+                headers: {"Content-Type": "application/json"}
             })
-                .then(function(response) {
+                .then(function (response) {
                     self.table.itemsControls.splice(index, 1);
                     self.table.items.splice(index, 1);
 
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     //вывести предупреждение что не удалось удалить.
                     error.data;
                 });
 
         },
 
-        redirectToViewPage: function (index){
+        redirectToViewPage: function (index) {
             let idItem = this.table.items[index].id;
-            window.location.href="/tasks/view/";
+            window.location.href = "/tasks/view/";
+        },
+
+        statuses: function () {
+            return [
+                "Новый",
+                "В работе",
+                "Завершен"
+            ]
+        },
+
+        buttonSaveFilter: function () {
+            this.$swal({
+                title: 'Назовите фильтр',
+                text: 'Фильтр появится в пункте меню "Фильтры", после сохранения',
+                type: 'warning',
+                input: 'text',
+                showCancelButton: true,
+                confirmButtonText: 'Сохранить',
+                cancelButtonText: 'Отмена',
+                showCloseButton: true,
+                showLoaderOnConfirm: true
+            }).then((result) => {
+                if (result.value) {
+                    let filterValues = [];
+                    this.table.fields.forEach(function(itemField){
+                        if (
+                            itemField.hasOwnProperty('filter')
+                            && itemField.filter.hasOwnProperty('value')
+                            && itemField.filter.value !== null
+                        ) {
+                            filterValues[itemField.key] = itemField.filter.value;
+                        }
+                    });
+                    this.axiosSaveFilter(result.value, filterValues);
+                    this.$swal("Сохранено", 'Фильтр успешно сохранен', 'success')
+                }
+            });
+        },
+
+        /**
+         * @param filterTitle string
+         * @param filterValues Object[]
+         * */
+        axiosSaveFilter: function(filterTitle, filterValues) {
+            //сделать проверку на пустой массив.
+            console.log(filterValues);
+            console.log(filterTitle);
+
+            //После сохранения применить фильтр.
+        },
+
+        convertToTimestampCurrentDay(){
+            return moment().format('x');
+        },
+
+        convertToTimestampCurrentMonth(){
+            
+        },
+
+        convertToTimestampCurrentYear(){
+
         }
     }
 

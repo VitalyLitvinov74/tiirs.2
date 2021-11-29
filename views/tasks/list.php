@@ -15,11 +15,11 @@ use yii\web\View;
             <div class="float-right">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Главная</a></li>
-<!--                    <li class="breadcrumb-item"><a href="javascript:void(0);">Задачи</a></li>-->
-                    <li class="breadcrumb-item active"><?=$this->title?></li>
+                    <!--                    <li class="breadcrumb-item"><a href="javascript:void(0);">Задачи</a></li>-->
+                    <li class="breadcrumb-item active"><?= $this->title ?></li>
                 </ol>
             </div>
-            <h4 class="page-title"><?=$this->title?></h4>
+            <h4 class="page-title"><?= $this->title ?></h4>
         </div><!--end page-title-box-->
     </div><!--end col-->
 </div>
@@ -33,12 +33,52 @@ use yii\web\View;
             >
                 <table class="table table-bordered table-striped hover">
                     <thead>
-                    <th
-                            v-for="field in table.fields"
-                            :style="{width: field.width + '%'}"
-                    >
-                        {{ field.label }}
-                    </th>
+                    <tr>
+                        <th
+                                v-for="field in table.fields"
+                                :style="{width: field.width + '%'}"
+                        >
+                            {{ field.label }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th
+                                v-for="field in table.fields"
+                        >
+
+                            <input
+                                    class="form-control"
+                                    v-if="field.filter && field.filter.type === 'text'"
+                                    :placeholder="field.filter.options.placeholder"
+                                    v-model="field.filter.value"
+                            >
+
+                            <select
+                                    class="form-control custom-select"
+                                    v-if="field.filter && field.filter.type == 'select'"
+                                    v-model="field.filter.value"
+                            >
+                                <option
+                                        v-for="option in field.filter.options"
+                                >
+                                    {{ option }}
+                                </option>
+                            </select>
+                            <button v-if="field.key == 'actions'"
+                                    type="button"
+                                    @click="buttonSaveFilter"
+                                    class="btn btn-sm btn-soft-info  btn-circle mr-2"
+                                    style="font-size: 20px;">
+                                <i class="far fa-save"></i>
+                            </button>
+                            <button v-if="field.key == 'actions'"
+                                    type="button"
+                                    class="btn btn-sm btn-soft-success btn-circle mr-2"
+                                    style="">
+                                <i class="dripicons-search"></i>
+                            </button>
+                        </th>
+                    </tr>
                     </thead>
                     <tbody>
                     <tr
@@ -74,7 +114,7 @@ use yii\web\View;
                             </div>
                         </td>
                         <td>
-<!--                            Стандартные кнопки-->
+                            <!--                            Стандартные кнопки-->
                             <button
                                     v-if="!itemEditing(index)"
                                     @click="changeTask(table.itemsControls[index])"
@@ -91,7 +131,7 @@ use yii\web\View;
                                     type="button" class="btn btn-sm btn-soft-info btn-circle">
                                 <i class="dripicons-exit" aria-hidden="true"></i>
                             </button>
-<!--                            кнопки которые открываются при редактировании-->
+                            <!--                            кнопки которые открываются при редактировании-->
                             <button v-if="itemEditing(index)"
                                     @click="saveTask(item, index)"
                                     type="button"
@@ -127,11 +167,13 @@ use yii\web\View;
                 </div>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item disabled"><a class="page-link" href="#" ><span aria-hidden="true">«</span> Туда</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><span aria-hidden="true">«</span>
+                                Туда</a></li>
                         <li class="page-item active"><a class="page-link " href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Сюда <span aria-hidden="true">»</span></a></li>
+                        <li class="page-item"><a class="page-link" href="#">Сюда <span aria-hidden="true">»</span></a>
+                        </li>
                     </ul><!--end pagination-->
                 </nav>
 
